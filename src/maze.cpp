@@ -1,6 +1,6 @@
 #include "maze.hpp"
 
-namespace deadalus
+namespace daedalus
 {
 
 Maze::Maze(unsigned int p_width, unsigned int p_height)

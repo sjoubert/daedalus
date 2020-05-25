@@ -1,9 +1,9 @@
-#ifndef DEADALUS_MAZE_HPP
-#define DEADALUS_MAZE_HPP
+#ifndef DAEDALUS_MAZE_HPP
+#define DAEDALUS_MAZE_HPP
 
 #include <vector>
 
-namespace deadalus
+namespace daedalus
 {
 
 enum class Separation
