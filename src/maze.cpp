@@ -23,6 +23,14 @@ std::size_t Maze::getHeight() const
 
 Separation Maze::getSeparation(Cell p_cell, Direction p_direction) const
 {
+  if ((p_direction == Direction::North && p_cell.row == 0)
+    || (p_direction == Direction::South && p_cell.row == getHeight() - 1)
+    || (p_direction == Direction::West && p_cell.column == 0)
+    || (p_direction == Direction::East && p_cell.column == getWidth() - 1))
+  {
+    return Separation::Wall;
+  }
+
   auto row = p_cell.row;
   if (p_direction == Direction::North)
   {

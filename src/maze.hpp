@@ -19,10 +19,11 @@ public:
   std::size_t getWidth() const;
   std::size_t getHeight() const;
 
+  Separation getSeparation(Cell p_cell, Direction p_direction) const;
+
   void draw(sf::RenderWindow& p_window) const;
 
 private:
-  Separation getSeparation(Cell p_cell, Direction p_direction) const;
 
   std::vector<std::vector<Separation>> m_eastSeparations;
   std::vector<std::vector<Separation>> m_southSeparations;

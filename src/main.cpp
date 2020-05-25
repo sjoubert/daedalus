@@ -51,22 +51,34 @@ int main()
           }
           case sf::Keyboard::Up:
           {
-            --playerRow;
+            if (maze.getSeparation({playerRow, playerCol}, daedalus::Direction::North) != daedalus::Separation::Wall)
+            {
+              --playerRow;
+            }
             break;
           }
           case sf::Keyboard::Down:
           {
-            ++playerRow;
-            break;
-          }
-          case sf::Keyboard::Left:
-          {
-            --playerCol;
+            if (maze.getSeparation({playerRow, playerCol}, daedalus::Direction::South) != daedalus::Separation::Wall)
+            {
+              ++playerRow;
+            }
             break;
           }
           case sf::Keyboard::Right:
           {
-            ++playerCol;
+            if (maze.getSeparation({playerRow, playerCol}, daedalus::Direction::East) != daedalus::Separation::Wall)
+            {
+              ++playerCol;
+            }
+            break;
+          }
+          case sf::Keyboard::Left:
+          {
+            if (maze.getSeparation({playerRow, playerCol}, daedalus::Direction::West) != daedalus::Separation::Wall)
+            {
+              --playerCol;
+            }
             break;
           }
           default:
