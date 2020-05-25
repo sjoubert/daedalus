@@ -39,9 +39,39 @@ int main()
         view.zoom(event.mouseWheelScroll.delta < 0 ? 1.1 : 0.9);
         window.setView(view);
       }
-      else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Num0)
+      else if (event.type == sf::Event::KeyPressed)
       {
-        window.setView(window.getDefaultView());
+        switch (event.key.code)
+        {
+          case sf::Keyboard::Num0:
+          {
+            window.setView(window.getDefaultView());
+            std::tie(playerRow, playerCol) = playerInitPosition();
+            break;
+          }
+          case sf::Keyboard::Up:
+          {
+            --playerRow;
+            break;
+          }
+          case sf::Keyboard::Down:
+          {
+            ++playerRow;
+            break;
+          }
+          case sf::Keyboard::Left:
+          {
+            --playerCol;
+            break;
+          }
+          case sf::Keyboard::Right:
+          {
+            ++playerCol;
+            break;
+          }
+          default:
+            break;
+        }
       }
 
       window.clear(sf::Color(100, 100, 100));
