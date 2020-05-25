@@ -14,4 +14,6 @@ set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELEASE ON)
 
 add_executable(daedalus
   src/main.cpp
+  src/maze.hpp
+  src/maze.cpp
 )
