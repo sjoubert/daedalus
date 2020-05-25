@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.17...3.17)
 
 project(daedalus
-  VERSION 0.1 
+  VERSION 0.1
   LANGUAGES CXX
 )
 
@@ -14,6 +14,7 @@ set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELEASE ON)
 
 add_executable(daedalus
   src/cell.hpp
+  src/constants.hpp
   src/main.cpp
   src/maze.hpp
   src/maze.cpp

@@ -1,18 +1,15 @@
+#include "constants.hpp"
 #include "maze.hpp"
 
 #include <SFML/Graphics/RenderWindow.hpp>
-#include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Window/Event.hpp>
 
 int main()
 {
-  constexpr int CELL_SIZE = 32;
-
   daedalus::Maze maze(16, 9);
 
-  sf::RenderWindow window(sf::VideoMode(maze.getWidth() * CELL_SIZE, maze.getHeight() * CELL_SIZE), "Daedalus");
-  sf::RectangleShape wall(sf::Vector2f(CELL_SIZE, 4));
-  wall.setFillColor(sf::Color::Black);
+  sf::RenderWindow window(sf::VideoMode(maze.getWidth() * daedalus::CELL_SIZE, maze.getHeight() * daedalus::CELL_SIZE),
+    "Daedalus");
 
   while (window.isOpen())
   {
@@ -35,34 +32,7 @@ int main()
       }
 
       window.clear(sf::Color(100, 100, 100));
-
-      // Row separations
-      wall.setRotation(0);
-      for (auto row = 1u; row < maze.getHeight(); ++row)
-      {
-        for (auto col = 0u; col < maze.getWidth(); ++col)
-        {
-          if (maze.getSeparation({row, col}, daedalus::Direction::North) == daedalus::Separation::Wall)
-          {
-            wall.setPosition({static_cast<float>(col) * CELL_SIZE, static_cast<float>(row) * CELL_SIZE});
-            window.draw(wall);
-          }
-        }
-      }
-      // Column separations
-      wall.setRotation(90);
-      for (auto row = 0u; row < maze.getHeight(); ++row)
-      {
-        for (auto col = 1u; col < maze.getWidth(); ++col)
-        {
-          if (maze.getSeparation({row, col}, daedalus::Direction::West) == daedalus::Separation::Wall)
-          {
-            wall.setPosition({static_cast<float>(col) * CELL_SIZE, static_cast<float>(row) * CELL_SIZE});
-            window.draw(wall);
-          }
-        }
-      }
-
+      maze.draw(window);
       window.display();
     }
   }

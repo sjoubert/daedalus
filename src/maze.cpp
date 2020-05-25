@@ -1,5 +1,7 @@
 #include "maze.hpp"
 
+#include <SFML/Graphics/RectangleShape.hpp>
+
 namespace daedalus
 {
 
@@ -40,6 +42,39 @@ Separation Maze::getSeparation(Cell p_cell, Direction p_direction) const
   else
   {
     return m_eastSeparations[row][col];
+  }
+}
+
+void Maze::draw(sf::RenderWindow& p_window) const
+{
+  sf::RectangleShape wall(sf::Vector2f(CELL_SIZE, 4));
+  wall.setFillColor(sf::Color::Black);
+
+  // Row separations
+  wall.setRotation(0);
+  for (auto row = 1u; row < getHeight(); ++row)
+  {
+    for (auto col = 0u; col < getWidth(); ++col)
+    {
+      if (getSeparation({row, col}, daedalus::Direction::North) == daedalus::Separation::Wall)
+      {
+        wall.setPosition({static_cast<float>(col) * CELL_SIZE, static_cast<float>(row) * CELL_SIZE});
+        p_window.draw(wall);
+      }
+    }
+  }
+  // Column separations
+  wall.setRotation(90);
+  for (auto row = 0u; row < getHeight(); ++row)
+  {
+    for (auto col = 1u; col < getWidth(); ++col)
+    {
+      if (getSeparation({row, col}, daedalus::Direction::West) == daedalus::Separation::Wall)
+      {
+        wall.setPosition({static_cast<float>(col) * CELL_SIZE, static_cast<float>(row) * CELL_SIZE});
+        p_window.draw(wall);
+      }
+    }
   }
 }
 
