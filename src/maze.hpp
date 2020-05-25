@@ -20,13 +20,18 @@ public:
   std::size_t getHeight() const;
 
   Separation getSeparation(Cell p_cell, Direction p_direction) const;
+  Cell getNextCell(Cell p_cell, Direction p_direction) const;
+
+  void setSeparation(Cell p_first, Cell p_second, Separation p_separation);
 
   void draw(sf::RenderWindow& p_window) const;
 
 private:
+  Separation const* getSeparationData(Cell p_cell, Direction p_direction) const;
 
-  std::vector<std::vector<Separation>> m_eastSeparations;
-  std::vector<std::vector<Separation>> m_southSeparations;
+  using SeparationGrid = std::vector<std::vector<Separation>>;
+  SeparationGrid m_eastSeparations;
+  SeparationGrid m_southSeparations;
 };
 
 }

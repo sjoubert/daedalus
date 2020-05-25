@@ -1,4 +1,5 @@
 #include "cell.hpp"
+#include "generator.hpp"
 #include "maze.hpp"
 
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -9,7 +10,7 @@
 
 int main()
 {
-  daedalus::Maze maze(16, 9);
+  auto maze = daedalus::Generator{16, 9}.primMaze();
 
   sf::VideoMode const videoMode(maze.getWidth() * daedalus::Cell::PIXELS, maze.getHeight() * daedalus::Cell::PIXELS);
   sf::RenderWindow window(videoMode, "Daedalus");
@@ -51,7 +52,7 @@ int main()
           }
           case sf::Keyboard::Up:
           {
-            if (maze.getSeparation({playerRow, playerCol}, daedalus::Direction::North) != daedalus::Separation::Wall)
+            if (maze.getSeparation({playerRow, playerCol}, daedalus::Direction::North) == daedalus::Separation::Empty)
             {
               --playerRow;
             }
@@ -59,7 +60,7 @@ int main()
           }
           case sf::Keyboard::Down:
           {
-            if (maze.getSeparation({playerRow, playerCol}, daedalus::Direction::South) != daedalus::Separation::Wall)
+            if (maze.getSeparation({playerRow, playerCol}, daedalus::Direction::South) == daedalus::Separation::Empty)
             {
               ++playerRow;
             }
@@ -67,7 +68,7 @@ int main()
           }
           case sf::Keyboard::Right:
           {
-            if (maze.getSeparation({playerRow, playerCol}, daedalus::Direction::East) != daedalus::Separation::Wall)
+            if (maze.getSeparation({playerRow, playerCol}, daedalus::Direction::East) == daedalus::Separation::Empty)
             {
               ++playerCol;
             }
@@ -75,7 +76,7 @@ int main()
           }
           case sf::Keyboard::Left:
           {
-            if (maze.getSeparation({playerRow, playerCol}, daedalus::Direction::West) != daedalus::Separation::Wall)
+            if (maze.getSeparation({playerRow, playerCol}, daedalus::Direction::West) == daedalus::Separation::Empty)
             {
               --playerCol;
             }

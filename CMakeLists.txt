@@ -15,6 +15,8 @@ set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELEASE ON)
 add_executable(daedalus
   src/cell.hpp
   src/constants.hpp
+  src/generator.hpp
+  src/generator.cpp
   src/main.cpp
   src/maze.hpp
   src/maze.cpp

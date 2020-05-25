@@ -7,6 +7,7 @@ namespace daedalus
 enum class Separation
 {
   Empty,
+  Border,
   Wall,
 };
 

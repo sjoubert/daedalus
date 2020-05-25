@@ -1,6 +1,9 @@
 #ifndef DEADALUS_CELL_HPP
 #define DEADALUS_CELL_HPP
 
+#include "constants.hpp"
+
+#include <compare>
 #include <cstddef>
 
 namespace daedalus
@@ -12,6 +15,8 @@ struct Cell
 
   std::size_t row;
   std::size_t column;
+
+  auto operator<=>(Cell const&) const = default;
 };
 
 }
