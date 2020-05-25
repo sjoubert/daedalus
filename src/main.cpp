@@ -1,4 +1,4 @@
-#include "constants.hpp"
+#include "cell.hpp"
 #include "maze.hpp"
 
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -8,8 +8,8 @@ int main()
 {
   daedalus::Maze maze(16, 9);
 
-  sf::RenderWindow window(sf::VideoMode(maze.getWidth() * daedalus::CELL_SIZE, maze.getHeight() * daedalus::CELL_SIZE),
-    "Daedalus");
+  sf::VideoMode const videoMode(maze.getWidth() * daedalus::Cell::PIXELS, maze.getHeight() * daedalus::Cell::PIXELS);
+  sf::RenderWindow window(videoMode, "Daedalus");
 
   while (window.isOpen())
   {

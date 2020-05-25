@@ -4,8 +4,6 @@
 namespace daedalus
 {
 
-constexpr int CELL_SIZE = 32;
-
 enum class Separation
 {
   Empty,

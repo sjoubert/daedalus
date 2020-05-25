@@ -47,7 +47,7 @@ Separation Maze::getSeparation(Cell p_cell, Direction p_direction) const
 
 void Maze::draw(sf::RenderWindow& p_window) const
 {
-  sf::RectangleShape wall(sf::Vector2f(CELL_SIZE, 4));
+  sf::RectangleShape wall(sf::Vector2f(Cell::PIXELS, 4));
   wall.setFillColor(sf::Color::Black);
 
   // Row separations
@@ -58,7 +58,7 @@ void Maze::draw(sf::RenderWindow& p_window) const
     {
       if (getSeparation({row, col}, daedalus::Direction::North) == daedalus::Separation::Wall)
       {
-        wall.setPosition({static_cast<float>(col) * CELL_SIZE, static_cast<float>(row) * CELL_SIZE});
+        wall.setPosition({static_cast<float>(col) * Cell::PIXELS, static_cast<float>(row) * Cell::PIXELS});
         p_window.draw(wall);
       }
     }
@@ -71,7 +71,7 @@ void Maze::draw(sf::RenderWindow& p_window) const
     {
       if (getSeparation({row, col}, daedalus::Direction::West) == daedalus::Separation::Wall)
       {
-        wall.setPosition({static_cast<float>(col) * CELL_SIZE, static_cast<float>(row) * CELL_SIZE});
+        wall.setPosition({static_cast<float>(col) * Cell::PIXELS, static_cast<float>(row) * Cell::PIXELS});
         p_window.draw(wall);
       }
     }
