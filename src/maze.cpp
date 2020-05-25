@@ -58,28 +58,48 @@ void Maze::draw(sf::RenderWindow& p_window) const
   sf::RectangleShape wall(sf::Vector2f(Cell::PIXELS, 4));
   wall.setFillColor(sf::Color::Black);
 
-  // Row separations
+  // Horizontal
   wall.setRotation(0);
+  wall.setOrigin(0, wall.getSize().y / 2);
+  // Borders
+  for (auto col = 0u; col < getWidth(); ++col)
+  {
+    wall.setPosition(col * Cell::PIXELS, 0);
+    p_window.draw(wall);
+    wall.setPosition(col * Cell::PIXELS, getHeight() * Cell::PIXELS);
+    p_window.draw(wall);
+  }
+  // Separations
   for (auto row = 1u; row < getHeight(); ++row)
   {
     for (auto col = 0u; col < getWidth(); ++col)
     {
       if (getSeparation({row, col}, daedalus::Direction::North) == daedalus::Separation::Wall)
       {
-        wall.setPosition({static_cast<float>(col) * Cell::PIXELS, static_cast<float>(row) * Cell::PIXELS});
+        wall.setPosition(col * Cell::PIXELS, row * Cell::PIXELS);
         p_window.draw(wall);
       }
     }
   }
-  // Column separations
+
+  // Vertical
   wall.setRotation(90);
+  // Borders
+  for (auto row = 0u; row < getHeight(); ++row)
+  {
+    wall.setPosition(0, row * Cell::PIXELS);
+    p_window.draw(wall);
+    wall.setPosition(getWidth() * Cell::PIXELS, row * Cell::PIXELS);
+    p_window.draw(wall);
+  }
+  // separations
   for (auto row = 0u; row < getHeight(); ++row)
   {
     for (auto col = 1u; col < getWidth(); ++col)
     {
       if (getSeparation({row, col}, daedalus::Direction::West) == daedalus::Separation::Wall)
       {
-        wall.setPosition({static_cast<float>(col) * Cell::PIXELS, static_cast<float>(row) * Cell::PIXELS});
+        wall.setPosition(col * Cell::PIXELS, row * Cell::PIXELS);
         p_window.draw(wall);
       }
     }

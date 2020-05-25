@@ -13,7 +13,7 @@ int main()
 
   sf::VideoMode const videoMode(maze.getWidth() * daedalus::Cell::PIXELS, maze.getHeight() * daedalus::Cell::PIXELS);
   sf::RenderWindow window(videoMode, "Daedalus");
-  auto const playerRadius = - daedalus::Cell::PIXELS / 2 * 0.7;
+  auto const playerRadius = daedalus::Cell::PIXELS / 2 * 0.7;
   sf::CircleShape player(playerRadius);
   player.setOrigin(playerRadius, playerRadius);
   player.setFillColor(sf::Color::Blue);
