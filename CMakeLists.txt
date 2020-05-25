@@ -13,7 +13,13 @@ set(CMAKE_INTERPROCEDURAL_OPTIMIZATION OFF)
 set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELEASE ON)
 
 add_executable(daedalus
+  src/cell.hpp
   src/main.cpp
   src/maze.hpp
   src/maze.cpp
+)
+
+find_package(SFML COMPONENTS graphics REQUIRED)
+target_link_libraries(daedalus PRIVATE
+  sfml-graphics
 )
