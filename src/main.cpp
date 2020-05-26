@@ -7,13 +7,20 @@
 #include <SFML/Window/Event.hpp>
 
 #include <utility>
+#include <random>
 
 int main()
 {
-  auto maze = daedalus::Generator{16, 9}.primMaze();
+  std::mt19937 rng(std::random_device{}());
+  std::uniform_int_distribution<std::size_t> sizeDist(10, 15);
 
-  sf::VideoMode const videoMode(maze.getWidth() * daedalus::Cell::PIXELS, maze.getHeight() * daedalus::Cell::PIXELS);
-  sf::RenderWindow window(videoMode, "Daedalus");
+  auto maze = daedalus::Generator{sizeDist(rng), sizeDist(rng)}.primMaze();
+
+  sf::RenderWindow window({1024, 640}, "Daedalus");
+  auto view = window.getDefaultView();
+  view.setCenter(maze.getWidth() * daedalus::Cell::PIXELS / 2, maze.getHeight() * daedalus::Cell::PIXELS / 2);
+  window.setView(view);
+
   auto const playerRadius = daedalus::Cell::PIXELS / 2 * 0.7;
   sf::CircleShape player(playerRadius);
   player.setOrigin(playerRadius, playerRadius);
@@ -42,7 +49,9 @@ int main()
         {
           case sf::Keyboard::Num0:
           {
-            window.setView(window.getDefaultView());
+            auto view = window.getDefaultView();
+            view.setCenter(maze.getWidth() * daedalus::Cell::PIXELS / 2, maze.getHeight() * daedalus::Cell::PIXELS / 2);
+            window.setView(view);
             playerPos = maze.getStart();
             break;
           }
@@ -90,6 +99,15 @@ int main()
       window.draw(player);
 
       window.display();
+
+      if (playerPos == maze.getEnd())
+      {
+        maze = daedalus::Generator{sizeDist(rng), sizeDist(rng)}.primMaze();
+        auto view = window.getView();
+        view.setCenter(maze.getWidth() * daedalus::Cell::PIXELS / 2, maze.getHeight() * daedalus::Cell::PIXELS / 2);
+        window.setView(view);
+        playerPos = maze.getStart();
+      }
     }
   }
 

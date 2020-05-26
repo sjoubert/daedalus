@@ -29,6 +29,7 @@ public:
   void setTile(Cell p_cell, Tile p_tile);
 
   Cell getStart() const;
+  Cell getEnd() const;
 
   void draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const;
 

@@ -153,6 +153,21 @@ Cell Maze::getStart() const
   return {};
 }
 
+Cell Maze::getEnd() const
+{
+  for (auto row = 0u; row < getHeight(); ++row)
+  {
+    for (auto col = 0u; col < getWidth(); ++col)
+    {
+      if (m_tiles[row][col] == Tile::End)
+      {
+        return {row, col};
+      }
+    }
+  }
+  return {};
+}
+
 void Maze::draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const
 {
   // Ground
