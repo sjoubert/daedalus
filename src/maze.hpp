@@ -23,8 +23,12 @@ public:
 
   Separation getSeparation(Cell p_cell, Direction p_direction) const;
   Cell getNextCell(Cell p_cell, Direction p_direction) const;
-
   void setSeparation(Cell p_first, Cell p_second, Separation p_separation);
+
+  Tile getTile(Cell p_cell) const;
+  void setTile(Cell p_cell, Tile p_tile);
+
+  Cell getStart() const;
 
   void draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const;
 
@@ -34,6 +38,8 @@ private:
   using SeparationGrid = std::vector<std::vector<Separation>>;
   SeparationGrid m_eastSeparations;
   SeparationGrid m_southSeparations;
+
+  std::vector<std::vector<Tile>> m_tiles;
 };
 
 }

@@ -10,6 +10,7 @@ namespace daedalus
 Maze::Maze(std::size_t p_width, std::size_t p_height)
   : m_eastSeparations{p_height, {p_width - 1, Separation::Wall}}
   , m_southSeparations{p_height - 1, {p_width, Separation::Wall}}
+  , m_tiles{p_height, {p_width, Tile::Floor}}
 {
 }
 
@@ -122,8 +123,63 @@ void Maze::setSeparation(Cell p_first, Cell p_second, Separation p_separation)
   }
 }
 
+Tile Maze::getTile(Cell p_cell) const
+{
+  return m_tiles[p_cell.row][p_cell.column];
+}
+
+void Maze::setTile(Cell p_cell, Tile p_tile)
+{
+  m_tiles[p_cell.row][p_cell.column] = p_tile;
+}
+
+Cell Maze::getStart() const
+{
+  for (auto row = 0u; row < getHeight(); ++row)
+  {
+    for (auto col = 0u; col < getWidth(); ++col)
+    {
+      if (m_tiles[row][col] == Tile::Start)
+      {
+        return {row, col};
+      }
+    }
+  }
+  return {};
+}
+
 void Maze::draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const
 {
+  // Ground
+  sf::RectangleShape tile({Cell::PIXELS, Cell::PIXELS});
+  for (auto row = 0u; row < getHeight(); ++row)
+  {
+    for (auto col = 0u; col < getWidth(); ++col)
+    {
+      switch (getTile({row, col}))
+      {
+        case Tile::Floor:
+        {
+          tile.setFillColor({100, 100, 100});
+          break;
+        }
+        case Tile::Start:
+        {
+          tile.setFillColor(sf::Color::White);
+          break;
+        }
+        case Tile::End:
+        {
+          tile.setFillColor(sf::Color::Green);
+          break;
+        }
+      }
+
+      tile.setPosition(col * Cell::PIXELS, row * Cell::PIXELS);
+      p_target.draw(tile, p_states);
+    }
+  }
+
   sf::RectangleShape wall(sf::Vector2f(Cell::PIXELS, 4));
   wall.setFillColor(sf::Color::Black);
 

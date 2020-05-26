@@ -19,11 +19,7 @@ int main()
   player.setOrigin(playerRadius, playerRadius);
   player.setFillColor(sf::Color::Blue);
 
-  auto playerInitPosition = []() -> std::pair<std::size_t, std::size_t>
-  {
-    return {0, 0};
-  };
-  auto [playerRow, playerCol] = playerInitPosition();
+  auto playerPos = maze.getStart();
 
   while (window.isOpen())
   {
@@ -47,38 +43,38 @@ int main()
           case sf::Keyboard::Num0:
           {
             window.setView(window.getDefaultView());
-            std::tie(playerRow, playerCol) = playerInitPosition();
+            playerPos = maze.getStart();
             break;
           }
           case sf::Keyboard::Up:
           {
-            if (maze.getSeparation({playerRow, playerCol}, daedalus::Direction::North) == daedalus::Separation::Empty)
+            if (maze.getSeparation({playerPos.row, playerPos.column}, daedalus::Direction::North) == daedalus::Separation::Empty)
             {
-              --playerRow;
+              --playerPos.row;
             }
             break;
           }
           case sf::Keyboard::Down:
           {
-            if (maze.getSeparation({playerRow, playerCol}, daedalus::Direction::South) == daedalus::Separation::Empty)
+            if (maze.getSeparation({playerPos.row, playerPos.column}, daedalus::Direction::South) == daedalus::Separation::Empty)
             {
-              ++playerRow;
+              ++playerPos.row;
             }
             break;
           }
           case sf::Keyboard::Right:
           {
-            if (maze.getSeparation({playerRow, playerCol}, daedalus::Direction::East) == daedalus::Separation::Empty)
+            if (maze.getSeparation({playerPos.row, playerPos.column}, daedalus::Direction::East) == daedalus::Separation::Empty)
             {
-              ++playerCol;
+              ++playerPos.column;
             }
             break;
           }
           case sf::Keyboard::Left:
           {
-            if (maze.getSeparation({playerRow, playerCol}, daedalus::Direction::West) == daedalus::Separation::Empty)
+            if (maze.getSeparation({playerPos.row, playerPos.column}, daedalus::Direction::West) == daedalus::Separation::Empty)
             {
-              --playerCol;
+              --playerPos.column;
             }
             break;
           }
@@ -87,10 +83,10 @@ int main()
         }
       }
 
-      window.clear(sf::Color(100, 100, 100));
+      window.clear(sf::Color::Black);
 
       window.draw(maze);
-      player.setPosition((playerCol + 0.5) * daedalus::Cell::PIXELS, (playerRow + 0.5) * daedalus::Cell::PIXELS);
+      player.setPosition((playerPos.column + 0.5) * daedalus::Cell::PIXELS, (playerPos.row + 0.5) * daedalus::Cell::PIXELS);
       window.draw(player);
 
       window.display();

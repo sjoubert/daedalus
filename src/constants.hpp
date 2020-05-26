@@ -11,6 +11,13 @@ enum class Separation
   Wall,
 };
 
+enum class Tile
+{
+  Floor,
+  Start,
+  End,
+};
+
 enum class Direction
 {
   North,
