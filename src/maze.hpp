@@ -4,6 +4,7 @@
 #include "constants.hpp"
 #include "cell.hpp"
 
+#include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 
 #include <vector>
@@ -12,6 +13,7 @@ namespace daedalus
 {
 
 class Maze
+  : public sf::Drawable
 {
 public:
   Maze(std::size_t p_width, std::size_t p_height);
@@ -24,7 +26,7 @@ public:
 
   void setSeparation(Cell p_first, Cell p_second, Separation p_separation);
 
-  void draw(sf::RenderWindow& p_window) const;
+  void draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const;
 
 private:
   Separation const* getSeparationData(Cell p_cell, Direction p_direction) const;

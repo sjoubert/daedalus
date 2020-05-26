@@ -122,7 +122,7 @@ void Maze::setSeparation(Cell p_first, Cell p_second, Separation p_separation)
   }
 }
 
-void Maze::draw(sf::RenderWindow& p_window) const
+void Maze::draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const
 {
   sf::RectangleShape wall(sf::Vector2f(Cell::PIXELS, 4));
   wall.setFillColor(sf::Color::Black);
@@ -134,9 +134,9 @@ void Maze::draw(sf::RenderWindow& p_window) const
   for (auto col = 0u; col < getWidth(); ++col)
   {
     wall.setPosition(col * Cell::PIXELS, 0);
-    p_window.draw(wall);
+    p_target.draw(wall, p_states);
     wall.setPosition(col * Cell::PIXELS, getHeight() * Cell::PIXELS);
-    p_window.draw(wall);
+    p_target.draw(wall, p_states);
   }
   // Separations
   for (auto row = 1u; row < getHeight(); ++row)
@@ -146,7 +146,7 @@ void Maze::draw(sf::RenderWindow& p_window) const
       if (getSeparation({row, col}, daedalus::Direction::North) != daedalus::Separation::Empty)
       {
         wall.setPosition(col * Cell::PIXELS, row * Cell::PIXELS);
-        p_window.draw(wall);
+        p_target.draw(wall, p_states);
       }
     }
   }
@@ -157,9 +157,9 @@ void Maze::draw(sf::RenderWindow& p_window) const
   for (auto row = 0u; row < getHeight(); ++row)
   {
     wall.setPosition(0, row * Cell::PIXELS);
-    p_window.draw(wall);
+    p_target.draw(wall, p_states);
     wall.setPosition(getWidth() * Cell::PIXELS, row * Cell::PIXELS);
-    p_window.draw(wall);
+    p_target.draw(wall, p_states);
   }
   // separations
   for (auto row = 0u; row < getHeight(); ++row)
@@ -169,7 +169,7 @@ void Maze::draw(sf::RenderWindow& p_window) const
       if (getSeparation({row, col}, daedalus::Direction::West) != daedalus::Separation::Empty)
       {
         wall.setPosition(col * Cell::PIXELS, row * Cell::PIXELS);
-        p_window.draw(wall);
+        p_target.draw(wall, p_states);
       }
     }
   }

@@ -89,7 +89,7 @@ int main()
 
       window.clear(sf::Color(100, 100, 100));
 
-      maze.draw(window);
+      window.draw(maze);
       player.setPosition((playerCol + 0.5) * daedalus::Cell::PIXELS, (playerRow + 0.5) * daedalus::Cell::PIXELS);
       window.draw(player);
 
