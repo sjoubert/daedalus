@@ -99,6 +99,10 @@ Cell Maze::getNextCell(Cell p_cell, Direction p_direction) const
 
 void Maze::setSeparation(Cell p_first, Cell p_second, Separation p_separation)
 {
+  assert(p_first.row == p_second.row || p_first.column == p_second.column);
+  assert(p_first.row < getHeight() && p_first.column < getWidth()
+    && p_second.row < getHeight() && p_second.column < getWidth());
+
   if (p_first.row == p_second.row)
   {
     if (p_first.column - 1 == p_second.column)
@@ -145,6 +149,7 @@ Cell Maze::getStart() const
       }
     }
   }
+  assert(false);
   return {};
 }
 

@@ -9,8 +9,8 @@ Generator::Generator(std::size_t p_width, std::size_t p_height)
   : m_width(p_width)
   , m_height(p_height)
   , m_rng(std::random_device{}())
-  , m_rowDist(0, m_height)
-  , m_colDist(0, p_width)
+  , m_rowDist(0, m_height - 1)
+  , m_colDist(0, p_width - 1)
 {
 }
 
@@ -49,8 +49,8 @@ Maze Generator::primMaze()
   }
 
   // Cells
-  maze.setTile(randomEmptyCell(), Tile::Start);
-  maze.setTile(randomEmptyCell(), Tile::End);
+  maze.setTile(randomEmptyCell(maze), Tile::Start);
+  maze.setTile(randomEmptyCell(maze), Tile::End);
 
   return maze;
 }
@@ -60,10 +60,10 @@ Cell Generator::randomCell()
   return {m_rowDist(m_rng), m_colDist(m_rng)};
 }
 
-Cell Generator::randomEmptyCell()
+Cell Generator::randomEmptyCell(Maze const& p_maze)
 {
   auto cell = randomCell();
-  while (false)
+  while (p_maze.getTile(cell) != Tile::Floor)
   {
     cell = randomCell();
   }

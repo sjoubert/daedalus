@@ -18,7 +18,7 @@ public:
 
 private:
   Cell randomCell();
-  Cell randomEmptyCell();
+  Cell randomEmptyCell(Maze const& p_maze);
 
   std::size_t m_width;
   std::size_t m_height;
