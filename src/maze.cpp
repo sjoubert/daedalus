@@ -143,6 +143,11 @@ void Maze::setPlayer(Cell p_cell)
   m_player = p_cell;
 }
 
+Cell Maze::getPlayer() const
+{
+  return m_player;
+}
+
 void Maze::movePlayer(Direction p_direction)
 {
   if (getSeparation(m_player, p_direction) == daedalus::Separation::Empty)

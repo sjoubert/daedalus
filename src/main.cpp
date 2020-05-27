@@ -12,14 +12,17 @@ int main()
 {
   std::mt19937 rng(std::random_device{}());
   std::uniform_int_distribution<std::size_t> sizeDist(10, 15);
-
   auto maze = daedalus::Generator{sizeDist(rng), sizeDist(rng)}.primMaze();
 
-  sf::RenderWindow window({1024, 640}, "Daedalus");
-  auto defaultView = window.getDefaultView();
-  defaultView.setCenter(maze.getWidth() * daedalus::Cell::PIXELS / 2, maze.getHeight() * daedalus::Cell::PIXELS / 2);
-  window.setView(defaultView);
+  auto centerOnPlayer = [](sf::RenderTarget& p_target, daedalus::Cell p_player)
+  {
+    auto view = p_target.getView();
+    view.setCenter(p_player.column * daedalus::Cell::PIXELS, p_player.row * daedalus::Cell::PIXELS);
+    p_target.setView(view);
+  };
 
+  sf::RenderWindow window({1024, 640}, "Daedalus");
+  centerOnPlayer(window, maze.getPlayer());
   while (window.isOpen())
   {
     sf::Event event;
@@ -41,9 +44,7 @@ int main()
         {
           case sf::Keyboard::Num0:
           {
-            auto view = window.getDefaultView();
-            view.setCenter(maze.getWidth() * daedalus::Cell::PIXELS / 2, maze.getHeight() * daedalus::Cell::PIXELS / 2);
-            window.setView(view);
+            centerOnPlayer(window, maze.getPlayer());
             break;
           }
           case sf::Keyboard::Up:
@@ -71,10 +72,7 @@ int main()
             if (maze.hasWon())
             {
               maze = daedalus::Generator{sizeDist(rng), sizeDist(rng)}.primMaze();
-              auto view = window.getView();
-              view.setCenter(
-                maze.getWidth() * daedalus::Cell::PIXELS / 2, maze.getHeight() * daedalus::Cell::PIXELS / 2);
-              window.setView(view);
+              centerOnPlayer(window, maze.getPlayer());
             }
             break;
           }

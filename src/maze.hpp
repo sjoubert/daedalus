@@ -29,6 +29,7 @@ public:
   void setTile(Cell p_cell, Tile p_tile);
 
   void setPlayer(Cell p_cell);
+  Cell getPlayer() const;
   void movePlayer(Direction p_direction);
 
   bool hasWon() const;
