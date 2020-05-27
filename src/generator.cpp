@@ -49,7 +49,9 @@ Maze Generator::primMaze()
   }
 
   // Cells
-  maze.setTile(randomEmptyCell(maze), Tile::Start);
+  auto startCell = randomEmptyCell(maze);
+  maze.setTile(startCell, Tile::Start);
+  maze.setPlayer(startCell);
   maze.setTile(randomEmptyCell(maze), Tile::End);
 
   return maze;

@@ -3,7 +3,6 @@
 #include "maze.hpp"
 
 #include <SFML/Graphics/RenderWindow.hpp>
-#include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Window/Event.hpp>
 
 #include <utility>
@@ -20,13 +19,6 @@ int main()
   auto defaultView = window.getDefaultView();
   defaultView.setCenter(maze.getWidth() * daedalus::Cell::PIXELS / 2, maze.getHeight() * daedalus::Cell::PIXELS / 2);
   window.setView(defaultView);
-
-  auto const playerRadius = daedalus::Cell::PIXELS / 2 * 0.7;
-  sf::CircleShape player(playerRadius);
-  player.setOrigin(playerRadius, playerRadius);
-  player.setFillColor(sf::Color::Blue);
-
-  auto playerPos = maze.getStart();
 
   while (window.isOpen())
   {
@@ -52,39 +44,26 @@ int main()
             auto view = window.getDefaultView();
             view.setCenter(maze.getWidth() * daedalus::Cell::PIXELS / 2, maze.getHeight() * daedalus::Cell::PIXELS / 2);
             window.setView(view);
-            playerPos = maze.getStart();
             break;
           }
           case sf::Keyboard::Up:
           {
-            if (maze.getSeparation({playerPos.row, playerPos.column}, daedalus::Direction::North) == daedalus::Separation::Empty)
-            {
-              --playerPos.row;
-            }
+            maze.movePlayer(daedalus::Direction::North);
             break;
           }
           case sf::Keyboard::Down:
           {
-            if (maze.getSeparation({playerPos.row, playerPos.column}, daedalus::Direction::South) == daedalus::Separation::Empty)
-            {
-              ++playerPos.row;
-            }
+            maze.movePlayer(daedalus::Direction::South);
             break;
           }
           case sf::Keyboard::Right:
           {
-            if (maze.getSeparation({playerPos.row, playerPos.column}, daedalus::Direction::East) == daedalus::Separation::Empty)
-            {
-              ++playerPos.column;
-            }
+            maze.movePlayer(daedalus::Direction::East);
             break;
           }
           case sf::Keyboard::Left:
           {
-            if (maze.getSeparation({playerPos.row, playerPos.column}, daedalus::Direction::West) == daedalus::Separation::Empty)
-            {
-              --playerPos.column;
-            }
+            maze.movePlayer(daedalus::Direction::West);
             break;
           }
           default:
@@ -93,20 +72,15 @@ int main()
       }
 
       window.clear(sf::Color::Black);
-
       window.draw(maze);
-      player.setPosition((playerPos.column + 0.5) * daedalus::Cell::PIXELS, (playerPos.row + 0.5) * daedalus::Cell::PIXELS);
-      window.draw(player);
-
       window.display();
 
-      if (playerPos == maze.getEnd())
+      if (maze.hasWon())
       {
         maze = daedalus::Generator{sizeDist(rng), sizeDist(rng)}.primMaze();
         auto view = window.getView();
         view.setCenter(maze.getWidth() * daedalus::Cell::PIXELS / 2, maze.getHeight() * daedalus::Cell::PIXELS / 2);
         window.setView(view);
-        playerPos = maze.getStart();
       }
     }
   }

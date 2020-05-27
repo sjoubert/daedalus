@@ -28,8 +28,10 @@ public:
   Tile getTile(Cell p_cell) const;
   void setTile(Cell p_cell, Tile p_tile);
 
-  Cell getStart() const;
-  Cell getEnd() const;
+  void setPlayer(Cell p_cell);
+  void movePlayer(Direction p_direction);
+
+  bool hasWon() const;
 
   void draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const override;
 
@@ -41,6 +43,8 @@ private:
   SeparationGrid m_southSeparations;
 
   std::vector<std::vector<Tile>> m_tiles;
+
+  Cell m_player;
 };
 
 }

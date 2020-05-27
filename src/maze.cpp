@@ -1,5 +1,6 @@
 #include "maze.hpp"
 
+#include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 
 #include <cassert>
@@ -137,35 +138,44 @@ void Maze::setTile(Cell p_cell, Tile p_tile)
   m_tiles[p_cell.row][p_cell.column] = p_tile;
 }
 
-Cell Maze::getStart() const
+void Maze::setPlayer(Cell p_cell)
 {
-  for (auto row = 0u; row < getHeight(); ++row)
-  {
-    for (auto col = 0u; col < getWidth(); ++col)
-    {
-      if (m_tiles[row][col] == Tile::Start)
-      {
-        return {row, col};
-      }
-    }
-  }
-  assert(false);
-  return {};
+  m_player = p_cell;
 }
 
-Cell Maze::getEnd() const
+void Maze::movePlayer(Direction p_direction)
 {
-  for (auto row = 0u; row < getHeight(); ++row)
+  if (getSeparation(m_player, p_direction) == daedalus::Separation::Empty)
   {
-    for (auto col = 0u; col < getWidth(); ++col)
+    switch (p_direction)
     {
-      if (m_tiles[row][col] == Tile::End)
+      case Direction::North:
       {
-        return {row, col};
+        --m_player.row;
+        break;
+      }
+      case Direction::South:
+      {
+        ++m_player.row;
+        break;
+      }
+      case Direction::East:
+      {
+        ++m_player.column;
+        break;
+      }
+      case Direction::West:
+      {
+        --m_player.column;
+        break;
       }
     }
   }
-  return {};
+}
+
+bool Maze::hasWon() const
+{
+  return getTile(m_player) == Tile::End;
 }
 
 void Maze::draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const
@@ -199,6 +209,14 @@ void Maze::draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const
       p_target.draw(tile, p_states);
     }
   }
+
+  // Player
+  auto const playerRadius = daedalus::Cell::PIXELS / 2 * 0.7;
+  sf::CircleShape player(playerRadius);
+  player.setOrigin(playerRadius, playerRadius);
+  player.setFillColor(sf::Color::Blue);
+  player.setPosition((m_player.column + 0.5) * daedalus::Cell::PIXELS, (m_player.row + 0.5) * daedalus::Cell::PIXELS);
+  p_target.draw(player, p_states);
 
   sf::RectangleShape wall(sf::Vector2f(Cell::PIXELS, 4));
   wall.setFillColor(sf::Color::Black);
