@@ -46,6 +46,7 @@ private:
   std::vector<std::vector<Tile>> m_tiles;
 
   Cell m_player;
+  bool m_hasKey = false;
 };
 
 }

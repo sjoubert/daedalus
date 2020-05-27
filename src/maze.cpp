@@ -150,37 +150,59 @@ Cell Maze::getPlayer() const
 
 void Maze::movePlayer(Direction p_direction)
 {
-  if (getSeparation(m_player, p_direction) == daedalus::Separation::Empty)
+  if (getSeparation(m_player, p_direction) != daedalus::Separation::Empty)
   {
-    switch (p_direction)
+    return;
+  }
+
+  switch (p_direction)
+  {
+    case Direction::North:
     {
-      case Direction::North:
-      {
-        --m_player.row;
-        break;
-      }
-      case Direction::South:
-      {
-        ++m_player.row;
-        break;
-      }
-      case Direction::East:
-      {
-        ++m_player.column;
-        break;
-      }
-      case Direction::West:
-      {
-        --m_player.column;
-        break;
-      }
+      --m_player.row;
+      break;
     }
+    case Direction::South:
+    {
+      ++m_player.row;
+      break;
+    }
+    case Direction::East:
+    {
+      ++m_player.column;
+      break;
+    }
+    case Direction::West:
+    {
+      --m_player.column;
+      break;
+    }
+  }
+
+  switch (getTile(m_player))
+  {
+    case Tile::Key:
+    {
+      m_hasKey = true;
+      setTile(m_player, Tile::Floor);
+      break;
+    }
+    case Tile::ClosedEnd:
+    {
+      if (m_hasKey)
+      {
+        setTile(m_player, Tile::OpenEnd);
+      }
+      break;
+    }
+    default:
+      break;
   }
 }
 
 bool Maze::hasWon() const
 {
-  return getTile(m_player) == Tile::End;
+  return getTile(m_player) == Tile::OpenEnd;
 }
 
 void Maze::draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const
@@ -203,9 +225,19 @@ void Maze::draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const
           tile.setFillColor(sf::Color::White);
           break;
         }
-        case Tile::End:
+        case Tile::ClosedEnd:
+        {
+          tile.setFillColor(sf::Color::Red);
+          break;
+        }
+        case Tile::OpenEnd:
         {
           tile.setFillColor(sf::Color::Green);
+          break;
+        }
+        case Tile::Key:
+        {
+          tile.setFillColor(sf::Color::Yellow);
           break;
         }
       }

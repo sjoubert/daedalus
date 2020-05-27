@@ -15,7 +15,9 @@ enum class Tile
 {
   Floor,
   Start,
-  End,
+  ClosedEnd,
+  OpenEnd,
+  Key,
 };
 
 enum class Direction
