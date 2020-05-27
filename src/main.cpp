@@ -66,6 +66,18 @@ int main()
             maze.movePlayer(daedalus::Direction::West);
             break;
           }
+          case sf::Keyboard::Enter:
+          {
+            if (maze.hasWon())
+            {
+              maze = daedalus::Generator{sizeDist(rng), sizeDist(rng)}.primMaze();
+              auto view = window.getView();
+              view.setCenter(
+                maze.getWidth() * daedalus::Cell::PIXELS / 2, maze.getHeight() * daedalus::Cell::PIXELS / 2);
+              window.setView(view);
+            }
+            break;
+          }
           default:
             break;
         }
@@ -74,14 +86,6 @@ int main()
       window.clear(sf::Color::Black);
       window.draw(maze);
       window.display();
-
-      if (maze.hasWon())
-      {
-        maze = daedalus::Generator{sizeDist(rng), sizeDist(rng)}.primMaze();
-        auto view = window.getView();
-        view.setCenter(maze.getWidth() * daedalus::Cell::PIXELS / 2, maze.getHeight() * daedalus::Cell::PIXELS / 2);
-        window.setView(view);
-      }
     }
   }
 
