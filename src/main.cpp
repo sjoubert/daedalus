@@ -17,9 +17,9 @@ int main()
   auto maze = daedalus::Generator{sizeDist(rng), sizeDist(rng)}.primMaze();
 
   sf::RenderWindow window({1024, 640}, "Daedalus");
-  auto view = window.getDefaultView();
-  view.setCenter(maze.getWidth() * daedalus::Cell::PIXELS / 2, maze.getHeight() * daedalus::Cell::PIXELS / 2);
-  window.setView(view);
+  auto defaultView = window.getDefaultView();
+  defaultView.setCenter(maze.getWidth() * daedalus::Cell::PIXELS / 2, maze.getHeight() * daedalus::Cell::PIXELS / 2);
+  window.setView(defaultView);
 
   auto const playerRadius = daedalus::Cell::PIXELS / 2 * 0.7;
   sf::CircleShape player(playerRadius);

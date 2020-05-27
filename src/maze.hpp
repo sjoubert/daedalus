@@ -31,7 +31,7 @@ public:
   Cell getStart() const;
   Cell getEnd() const;
 
-  void draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const;
+  void draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const override;
 
 private:
   Separation const* getSeparationData(Cell p_cell, Direction p_direction) const;
