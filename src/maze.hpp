@@ -44,8 +44,9 @@ private:
   SeparationGrid m_southSeparations;
 
   std::vector<std::vector<Tile>> m_tiles;
+  std::vector<std::vector<bool>> m_fog;
 
-  Cell m_player;
+  Cell m_player{};
   bool m_hasKey = false;
 };
 

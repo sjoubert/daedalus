@@ -12,6 +12,7 @@ Maze::Maze(std::size_t p_width, std::size_t p_height)
   : m_eastSeparations{p_height, {p_width - 1, Separation::Wall}}
   , m_southSeparations{p_height - 1, {p_width, Separation::Wall}}
   , m_tiles{p_height, {p_width, Tile::Floor}}
+  , m_fog{p_height, std::vector<bool>(p_width, true)}
 {
 }
 
@@ -141,6 +142,36 @@ void Maze::setTile(Cell p_cell, Tile p_tile)
 void Maze::setPlayer(Cell p_cell)
 {
   m_player = p_cell;
+
+  switch (getTile(m_player))
+  {
+    case Tile::Key:
+    {
+      m_hasKey = true;
+      setTile(m_player, Tile::Floor);
+      break;
+    }
+    case Tile::ClosedEnd:
+    {
+      if (m_hasKey)
+      {
+        setTile(m_player, Tile::OpenEnd);
+      }
+      break;
+    }
+    default:
+      break;
+  }
+
+  m_fog[m_player.row][m_player.column] = false;
+  for (auto dir: {Direction::North, Direction::South, Direction::East, Direction::West})
+  {
+    if (getSeparation(m_player, dir) == Separation::Empty)
+    {
+      auto nextCell = getNextCell(m_player, dir);
+      m_fog[nextCell.row][nextCell.column] = false;
+    }
+  }
 }
 
 Cell Maze::getPlayer() const
@@ -178,26 +209,7 @@ void Maze::movePlayer(Direction p_direction)
       break;
     }
   }
-
-  switch (getTile(m_player))
-  {
-    case Tile::Key:
-    {
-      m_hasKey = true;
-      setTile(m_player, Tile::Floor);
-      break;
-    }
-    case Tile::ClosedEnd:
-    {
-      if (m_hasKey)
-      {
-        setTile(m_player, Tile::OpenEnd);
-      }
-      break;
-    }
-    default:
-      break;
-  }
+  setPlayer(m_player);
 }
 
 bool Maze::hasWon() const
@@ -301,6 +313,20 @@ void Maze::draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const
       {
         wall.setPosition(col * Cell::PIXELS, row * Cell::PIXELS);
         p_target.draw(wall, p_states);
+      }
+    }
+  }
+
+  // Fog of war
+  tile.setFillColor(sf::Color::Black);
+  for (auto row = 0u; row < getHeight(); ++row)
+  {
+    for (auto col = 0u; col < getWidth(); ++col)
+    {
+      if (m_fog[row][col])
+      {
+        tile.setPosition(col * Cell::PIXELS, row * Cell::PIXELS);
+        p_target.draw(tile, p_states);
       }
     }
   }
