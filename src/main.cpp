@@ -81,7 +81,7 @@ int main()
         }
       }
 
-      window.clear(sf::Color::Black);
+      window.clear();
       window.draw(maze);
       window.display();
     }

@@ -219,6 +219,9 @@ bool Maze::hasWon() const
 
 void Maze::draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const
 {
+  sf::Color const fogColor{25, 25, 25};
+  p_target.clear(fogColor);
+
   // Ground
   sf::RectangleShape tile({Cell::PIXELS, Cell::PIXELS});
   for (auto row = 0u; row < getHeight(); ++row)
@@ -318,7 +321,21 @@ void Maze::draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const
   }
 
   // Fog of war
-  tile.setFillColor(sf::Color::Black);
+  tile.setFillColor(fogColor);
+  for (auto row = -1; row <= static_cast<decltype(row)>(getHeight()); ++row)
+  {
+    tile.setPosition(- Cell::PIXELS, row * Cell::PIXELS);
+    p_target.draw(tile, p_states);
+    tile.setPosition(getWidth() * Cell::PIXELS, row * Cell::PIXELS);
+    p_target.draw(tile, p_states);
+  }
+  for (auto col = -1; col <= static_cast<decltype(col)>(getWidth()); ++col)
+  {
+    tile.setPosition(col * Cell::PIXELS, - Cell::PIXELS);
+    p_target.draw(tile, p_states);
+    tile.setPosition(col * Cell::PIXELS, getHeight() * Cell::PIXELS);
+    p_target.draw(tile, p_states);
+  }
   for (auto row = 0u; row < getHeight(); ++row)
   {
     for (auto col = 0u; col < getWidth(); ++col)
