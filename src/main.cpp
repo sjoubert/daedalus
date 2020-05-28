@@ -3,16 +3,48 @@
 #include "maze.hpp"
 
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/System/Clock.hpp>
 #include <SFML/Window/Event.hpp>
 
 #include <utility>
 #include <random>
+
+void handleTimer(sf::Clock const& p_clock, sf::RenderWindow& p_window, daedalus::Maze const& p_maze)
+{
+  auto const timeRatio = p_clock.getElapsedTime().asSeconds() / (p_maze.getWidth() * p_maze.getHeight());
+  if (timeRatio > 1)
+  {
+    p_window.close();
+  }
+
+  auto saveView = p_window.getView();
+  p_window.setView(p_window.getDefaultView());
+
+  constexpr int OFFSET = 10;
+  constexpr int WIDTH = 25;
+  auto const height = p_window.getSize().y - 2.0f * OFFSET;
+
+  sf::RectangleShape timer({WIDTH, height});
+  timer.setPosition(p_window.getSize().x - WIDTH - OFFSET, OFFSET);
+
+  timer.setFillColor({130, 200, 50});
+  p_window.draw(timer);
+
+  timer.setFillColor({200, 100, 50});
+  timer.setSize({WIDTH , height * timeRatio});
+  p_window.draw(timer);
+
+  p_window.setView(saveView);
+}
 
 int main()
 {
   std::mt19937 rng(std::random_device{}());
   std::uniform_int_distribution<std::size_t> sizeDist(10, 15);
   auto maze = daedalus::Generator{sizeDist(rng), sizeDist(rng)}.primMaze();
+
+  sf::Clock clock;
 
   auto centerOnPlayer = [](sf::RenderTarget& p_target, daedalus::Cell p_player)
   {
@@ -72,6 +104,7 @@ int main()
             if (maze.hasWon())
             {
               maze = daedalus::Generator{sizeDist(rng), sizeDist(rng)}.primMaze();
+              clock.restart();
               centerOnPlayer(window, maze.getPlayer());
             }
             break;
@@ -80,11 +113,12 @@ int main()
             break;
         }
       }
-
-      window.clear();
-      window.draw(maze);
-      window.display();
     }
+
+    window.clear();
+    window.draw(maze);
+    handleTimer(clock, window, maze);
+    window.display();
   }
 
   return 0;
