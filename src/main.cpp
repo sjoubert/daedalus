@@ -10,7 +10,9 @@
 #include <utility>
 #include <random>
 
-void handleTimer(sf::Clock const& p_clock, sf::RenderWindow& p_window, daedalus::Maze const& p_maze)
+static constexpr int OFFSET = 10;
+
+void drawHUD(sf::Clock const& p_clock, sf::RenderWindow& p_window, daedalus::Maze const& p_maze)
 {
   auto const timeRatio = p_clock.getElapsedTime().asSeconds() / (p_maze.getWidth() * p_maze.getHeight());
   if (timeRatio > 1)
@@ -21,7 +23,6 @@ void handleTimer(sf::Clock const& p_clock, sf::RenderWindow& p_window, daedalus:
   auto saveView = p_window.getView();
   p_window.setView(p_window.getDefaultView());
 
-  constexpr int OFFSET = 10;
   constexpr int WIDTH = 25;
   auto const height = p_window.getSize().y - 2.0f * OFFSET;
 
@@ -34,6 +35,14 @@ void handleTimer(sf::Clock const& p_clock, sf::RenderWindow& p_window, daedalus:
   timer.setFillColor({200, 100, 50});
   timer.setSize({WIDTH , height * timeRatio});
   p_window.draw(timer);
+
+  if (p_maze.hasKey())
+  {
+    sf::RectangleShape key({daedalus::Cell::PIXELS, daedalus::Cell::PIXELS});
+    key.setFillColor(sf::Color::Yellow);
+    key.setPosition({OFFSET, OFFSET});
+    p_window.draw(key);
+  }
 
   p_window.setView(saveView);
 }
@@ -117,7 +126,7 @@ int main()
 
     window.clear();
     window.draw(maze);
-    handleTimer(clock, window, maze);
+    drawHUD(clock, window, maze);
     window.display();
   }
 

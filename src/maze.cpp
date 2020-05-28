@@ -217,6 +217,11 @@ bool Maze::hasWon() const
   return getTile(m_player) == Tile::OpenEnd;
 }
 
+bool Maze::hasKey() const
+{
+  return m_hasKey;
+}
+
 void Maze::draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const
 {
   sf::Color const fogColor{25, 25, 25};

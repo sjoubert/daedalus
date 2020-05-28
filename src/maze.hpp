@@ -33,6 +33,7 @@ public:
   void movePlayer(Direction p_direction);
 
   bool hasWon() const;
+  bool hasKey() const;
 
   void draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const override;
 
