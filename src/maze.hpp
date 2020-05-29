@@ -5,6 +5,7 @@
 #include "cell.hpp"
 
 #include <SFML/Graphics/Drawable.hpp>
+#include <SFML/Graphics/Transformable.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 
 #include <vector>
@@ -14,6 +15,7 @@ namespace daedalus
 
 class Maze
   : public sf::Drawable
+  , public sf::Transformable
 {
 public:
   Maze(std::size_t p_width, std::size_t p_height);
@@ -34,6 +36,8 @@ public:
 
   bool hasWon() const;
   bool doorIsOpen() const;
+
+  void clearFog();
 
   void draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const override;
 

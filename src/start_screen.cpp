@@ -1,9 +1,13 @@
 #include "start_screen.hpp"
 
+#include "generator.hpp"
+
 #include <SFML/Window/Event.hpp>
 
 #include "imgui.h"
 #include "imgui-SFML.h"
+
+#include <random>
 
 namespace daedalus
 {
@@ -22,6 +26,16 @@ StartScreen::~StartScreen()
 
 void StartScreen::run()
 {
+  auto size = m_window.getSize();
+  auto maze = daedalus::Generator{size.x / Cell::PIXELS, size.y / Cell::PIXELS}.primMaze();
+  maze.setPosition(size.x % Cell::PIXELS / 2., size.y % Cell::PIXELS / 2.);
+  maze.clearFog();
+
+  sf::Clock mazeClock;
+  constexpr std::array directions{Direction::North, Direction::South, Direction::East, Direction::West};
+  std::mt19937 rng(std::random_device{}());
+  std::uniform_int_distribution<> dist(0, directions.size());
+
   sf::Clock deltaClock;
   while (m_window.isOpen())
   {
@@ -34,6 +48,13 @@ void StartScreen::run()
         m_window.close();
       }
     }
+
+    if (mazeClock.getElapsedTime() > sf::seconds(0.5))
+    {
+      maze.movePlayer(directions[dist(rng)]);
+      mazeClock.restart();
+    }
+
     ImGui::SFML::Update(m_window, deltaClock.restart());
 
     ImGui::Begin("", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove);
@@ -52,6 +73,7 @@ void StartScreen::run()
     ImGui::End();
 
     m_window.clear(sf::Color::Black);
+    m_window.draw(maze);
     ImGui::SFML::Render(m_window);
     m_window.display();
   }

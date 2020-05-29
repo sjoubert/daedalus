@@ -229,8 +229,18 @@ bool Maze::doorIsOpen() const
   return m_doorOpen;
 }
 
+void Maze::clearFog()
+{
+  for (auto& row: m_fog)
+  {
+    std::fill(row.begin(), row.end(), false);
+  }
+}
+
 void Maze::draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const
 {
+  p_states.transform *= getTransform();
+
   sf::Color const fogColor{25, 25, 25};
   p_target.clear(fogColor);
 
