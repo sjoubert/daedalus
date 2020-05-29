@@ -33,12 +33,13 @@ public:
   void movePlayer(Direction p_direction);
 
   bool hasWon() const;
-  bool hasKey() const;
+  bool doorIsOpen() const;
 
   void draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const override;
 
 private:
   Separation const* getSeparationData(Cell p_cell, Direction p_direction) const;
+  void openDoor();
 
   using SeparationGrid = std::vector<std::vector<Separation>>;
   SeparationGrid m_eastSeparations;
@@ -48,7 +49,7 @@ private:
   std::vector<std::vector<bool>> m_fog;
 
   Cell m_player{};
-  bool m_hasKey = false;
+  bool m_doorOpen = false;
 };
 
 }

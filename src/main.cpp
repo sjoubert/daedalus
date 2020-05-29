@@ -40,13 +40,10 @@ void drawHUD(sf::Clock const& p_clock, sf::RenderWindow& p_window, daedalus::Maz
   timer.setSize({WIDTH , height * timeRatio});
   p_window.draw(timer);
 
-  if (p_maze.hasKey())
-  {
-    sf::RectangleShape key({daedalus::Cell::PIXELS, daedalus::Cell::PIXELS});
-    key.setFillColor(sf::Color::Yellow);
-    key.setPosition({OFFSET, OFFSET});
-    p_window.draw(key);
-  }
+  sf::RectangleShape doorStatus({daedalus::Cell::PIXELS, daedalus::Cell::PIXELS});
+  doorStatus.setFillColor(p_maze.doorIsOpen() ? sf::Color::Green : sf::Color::Red);
+  doorStatus.setPosition({OFFSET, OFFSET});
+  p_window.draw(doorStatus);
 
   p_window.setView(saveView);
 }

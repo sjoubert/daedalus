@@ -147,16 +147,8 @@ void Maze::setPlayer(Cell p_cell)
   {
     case Tile::Key:
     {
-      m_hasKey = true;
+      openDoor();
       setTile(m_player, Tile::Floor);
-      break;
-    }
-    case Tile::ClosedEnd:
-    {
-      if (m_hasKey)
-      {
-        setTile(m_player, Tile::OpenEnd);
-      }
       break;
     }
     default:
@@ -217,9 +209,24 @@ bool Maze::hasWon() const
   return getTile(m_player) == Tile::OpenEnd;
 }
 
-bool Maze::hasKey() const
+void Maze::openDoor()
 {
-  return m_hasKey;
+  m_doorOpen = true;
+  for (auto& row: m_tiles)
+  {
+    for (auto& tile: row)
+    {
+      if (tile == Tile::ClosedEnd)
+      {
+        tile = Tile::OpenEnd;
+      }
+    }
+  }
+}
+
+bool Maze::doorIsOpen() const
+{
+  return m_doorOpen;
 }
 
 void Maze::draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const
