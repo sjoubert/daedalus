@@ -16,9 +16,13 @@ add_executable(daedalus
   src/main.cpp
   src/maze.hpp
   src/maze.cpp
+  src/start_screen.hpp
+  src/start_screen.cpp
 )
 
 find_package(SFML COMPONENTS graphics REQUIRED)
+find_package(ImGui-SFML REQUIRED)
 target_link_libraries(daedalus PRIVATE
   sfml-graphics
+  ImGui-SFML::ImGui-SFML
 )

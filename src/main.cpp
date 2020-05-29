@@ -1,11 +1,15 @@
 #include "cell.hpp"
 #include "generator.hpp"
 #include "maze.hpp"
+#include "start_screen.hpp"
 
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/Window/Event.hpp>
+
+#include "imgui.h"
+#include "imgui-SFML.h"
 
 #include <utility>
 #include <random>
@@ -49,11 +53,20 @@ void drawHUD(sf::Clock const& p_clock, sf::RenderWindow& p_window, daedalus::Maz
 
 int main()
 {
+  sf::RenderWindow window({1024, 640}, "Daedalus");
+  ImGui::SFML::Init(window);
+  auto& io = ImGui::GetIO();
+  io.IniFilename = nullptr;
+  io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+
+  {
+    daedalus::StartScreen start(window);
+    start.run();
+  }
+
   std::mt19937 rng(std::random_device{}());
   std::uniform_int_distribution<std::size_t> sizeDist(10, 15);
   auto maze = daedalus::Generator{sizeDist(rng), sizeDist(rng)}.primMaze();
-
-  sf::Clock clock;
 
   auto centerOnPlayer = [](sf::RenderTarget& p_target, daedalus::Cell p_player)
   {
@@ -61,9 +74,9 @@ int main()
     view.setCenter(p_player.column * daedalus::Cell::PIXELS, p_player.row * daedalus::Cell::PIXELS);
     p_target.setView(view);
   };
-
-  sf::RenderWindow window({1024, 640}, "Daedalus");
   centerOnPlayer(window, maze.getPlayer());
+
+  sf::Clock clock;
   while (window.isOpen())
   {
     sf::Event event;
@@ -130,5 +143,6 @@ int main()
     window.display();
   }
 
+  ImGui::SFML::Shutdown();
   return 0;
 }
