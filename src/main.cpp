@@ -118,7 +118,7 @@ int main()
             maze.movePlayer(daedalus::Direction::West);
             break;
           }
-          case sf::Keyboard::Enter:
+          case sf::Keyboard::Space:
           {
             if (maze.hasWon())
             {
