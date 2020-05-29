@@ -29,14 +29,9 @@ void StartScreen::run()
     while (m_window.pollEvent(event))
     {
       ImGui::SFML::ProcessEvent(event);
-      switch (event.type)
+      if (event.type == sf::Event::Closed)
       {
-        case sf::Event::Closed:
-        {
-          m_window.close();
-        }
-        default:
-          break;
+        m_window.close();
       }
     }
     ImGui::SFML::Update(m_window, deltaClock.restart());
