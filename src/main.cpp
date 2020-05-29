@@ -36,7 +36,18 @@ void drawHUD(sf::Clock const& p_clock, sf::RenderWindow& p_window, daedalus::Maz
   timer.setFillColor({130, 200, 50});
   p_window.draw(timer);
 
-  timer.setFillColor({200, 100, 50});
+  if (timeRatio < 0.33)
+  {
+    timer.setFillColor({255, 230, 120});
+  }
+  else if (timeRatio < 0.66)
+  {
+    timer.setFillColor({200, 100, 50});
+  }
+  else
+  {
+    timer.setFillColor({240, 80, 90});
+  }
   timer.setSize({WIDTH , height * timeRatio});
   p_window.draw(timer);
 
