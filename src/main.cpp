@@ -1,6 +1,7 @@
 #include "cell.hpp"
 #include "generator.hpp"
 #include "maze.hpp"
+#include "next_level_screen.hpp"
 #include "start_screen.hpp"
 
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -138,6 +139,11 @@ int main()
           {
             if (maze.hasWon())
             {
+              {
+                daedalus::NextLevelScreen nextLevelScreen(window);
+                nextLevelScreen.run();
+              }
+
               maze = daedalus::Generator{sizeDist(rng), sizeDist(rng)}.primMaze();
               clock.restart();
               centerView(window, maze.getVisibleCenter());

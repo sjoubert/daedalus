@@ -57,7 +57,7 @@ void StartScreen::run()
 
     ImGui::SFML::Update(m_window, deltaClock.restart());
 
-    ImGui::Begin("", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove);
+    ImGui::Begin("start_menu", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove);
     ImVec2 buttonWidth{200, 0};
     if (ImGui::Button("Start new game", buttonWidth))
     {
