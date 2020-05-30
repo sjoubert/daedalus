@@ -109,12 +109,6 @@ int main()
       {
         window.close();
       }
-      else if (event.type == sf::Event::MouseWheelScrolled)
-      {
-        auto view = window.getView();
-        view.zoom(event.mouseWheelScroll.delta < 0 ? 1.1 : 0.9);
-        window.setView(view);
-      }
       else if (event.type == sf::Event::KeyPressed)
       {
         switch (event.key.code)
