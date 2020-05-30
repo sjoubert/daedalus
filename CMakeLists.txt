@@ -16,11 +16,14 @@ add_executable(daedalus
   src/main.cpp
   src/maze.hpp
   src/maze.cpp
-  src/next_level_screen.hpp
-  src/next_level_screen.cpp
-  src/start_screen.hpp
-  src/start_screen.cpp
+  src/screen/next_level_screen.hpp
+  src/screen/next_level_screen.cpp
+  src/screen/screen.hpp
+  src/screen/screen.cpp
+  src/screen/start_screen.hpp
+  src/screen/start_screen.cpp
 )
+target_include_directories(daedalus PRIVATE src/)
 
 find_package(SFML COMPONENTS graphics REQUIRED)
 find_package(ImGui-SFML REQUIRED)

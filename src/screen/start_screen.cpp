@@ -13,20 +13,13 @@ namespace daedalus
 {
 
 StartScreen::StartScreen(sf::RenderWindow& p_window)
-  : m_window(p_window)
-  , m_savedView(m_window.getView())
+  : Screen(p_window)
 {
-  m_window.setView(m_window.getDefaultView());
-}
-
-StartScreen::~StartScreen()
-{
-  m_window.setView(m_savedView);
 }
 
 void StartScreen::run()
 {
-  auto size = m_window.getSize();
+  auto size = getWindow().getSize();
   auto maze = daedalus::Generator{size.x / Cell::PIXELS, size.y / Cell::PIXELS}.primMaze();
   maze.setPosition(size.x % Cell::PIXELS / 2., size.y % Cell::PIXELS / 2.);
   maze.clearFog();
@@ -37,15 +30,15 @@ void StartScreen::run()
   std::uniform_int_distribution<> dist(0, directions.size());
 
   sf::Clock deltaClock;
-  while (m_window.isOpen())
+  while (getWindow().isOpen())
   {
     sf::Event event;
-    while (m_window.pollEvent(event))
+    while (getWindow().pollEvent(event))
     {
       ImGui::SFML::ProcessEvent(event);
       if (event.type == sf::Event::Closed)
       {
-        m_window.close();
+        getWindow().close();
       }
     }
 
@@ -55,7 +48,7 @@ void StartScreen::run()
       mazeClock.restart();
     }
 
-    ImGui::SFML::Update(m_window, deltaClock.restart());
+    ImGui::SFML::Update(getWindow(), deltaClock.restart());
 
     ImGui::Begin("start_menu", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove);
     ImVec2 buttonWidth{200, 0};
@@ -65,16 +58,16 @@ void StartScreen::run()
     }
     if (ImGui::Button("Quit", buttonWidth))
     {
-      m_window.close();
+      getWindow().close();
     }
-    ImGui::SetWindowPos({(m_window.getSize().x - ImGui::GetWindowWidth()) / 2,
-      (m_window.getSize().y - ImGui::GetWindowHeight()) / 2.f});
+    ImGui::SetWindowPos({(getWindow().getSize().x - ImGui::GetWindowWidth()) / 2,
+      (getWindow().getSize().y - ImGui::GetWindowHeight()) / 2.f});
     ImGui::End();
 
-    m_window.clear(sf::Color::Black);
-    m_window.draw(maze);
-    ImGui::SFML::Render(m_window);
-    m_window.display();
+    getWindow().clear(sf::Color::Black);
+    getWindow().draw(maze);
+    ImGui::SFML::Render(getWindow());
+    getWindow().display();
   }
 }
 

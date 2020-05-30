@@ -1,8 +1,8 @@
 #include "cell.hpp"
 #include "generator.hpp"
 #include "maze.hpp"
-#include "next_level_screen.hpp"
-#include "start_screen.hpp"
+#include "screen/next_level_screen.hpp"
+#include "screen/start_screen.hpp"
 
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
