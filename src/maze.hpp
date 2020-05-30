@@ -36,6 +36,7 @@ public:
 
   bool hasWon() const;
   bool doorIsOpen() const;
+  bool hasBonus() const;
 
   void clearFog();
 
@@ -54,6 +55,7 @@ private:
 
   Cell m_player{};
   bool m_doorOpen = false;
+  bool m_hasBonus = false;
 };
 
 }

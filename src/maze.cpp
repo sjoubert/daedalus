@@ -151,6 +151,12 @@ void Maze::setPlayer(Cell p_cell)
       setTile(m_player, Tile::Floor);
       break;
     }
+    case Tile::Bonus:
+    {
+      m_hasBonus = true;
+      setTile(m_player, Tile::Floor);
+      break;
+    }
     default:
       break;
   }
@@ -229,6 +235,11 @@ bool Maze::doorIsOpen() const
   return m_doorOpen;
 }
 
+bool Maze::hasBonus() const
+{
+  return m_hasBonus;
+}
+
 void Maze::clearFog()
 {
   for (auto& row: m_fog)
@@ -277,6 +288,11 @@ void Maze::draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const
           tile.setFillColor(sf::Color::Yellow);
           break;
         }
+        case Tile::Bonus:
+        {
+          tile.setFillColor(sf::Color::Blue);
+          break;
+        }
       }
 
       tile.setPosition(col * Cell::PIXELS, row * Cell::PIXELS);
@@ -288,7 +304,7 @@ void Maze::draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const
   auto const playerRadius = daedalus::Cell::PIXELS / 2 * 0.7;
   sf::CircleShape player(playerRadius);
   player.setOrigin(playerRadius, playerRadius);
-  player.setFillColor(sf::Color::Blue);
+  player.setFillColor(sf::Color::Cyan);
   player.setPosition((m_player.column + 0.5) * daedalus::Cell::PIXELS, (m_player.row + 0.5) * daedalus::Cell::PIXELS);
   p_target.draw(player, p_states);
 

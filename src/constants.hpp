@@ -18,6 +18,7 @@ enum class Tile
   ClosedEnd,
   OpenEnd,
   Key,
+  Bonus,
 };
 
 enum class Direction
