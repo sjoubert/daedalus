@@ -31,7 +31,6 @@ public:
   void setTile(Cell p_cell, Tile p_tile);
 
   void setPlayer(Cell p_cell);
-  Cell getPlayer() const;
   void movePlayer(Direction p_direction);
 
   bool hasWon() const;
@@ -41,6 +40,7 @@ public:
   void clearFog();
 
   void draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const override;
+  sf::Vector2f getVisibleCenter() const;
 
 private:
   Separation const* getSeparationData(Cell p_cell, Direction p_direction) const;

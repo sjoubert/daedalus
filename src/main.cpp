@@ -91,15 +91,16 @@ int main()
   std::uniform_int_distribution<std::size_t> sizeDist(10, 15);
   auto maze = daedalus::Generator{sizeDist(rng), sizeDist(rng)}.primMaze();
 
-  auto centerOnPlayer = [](sf::RenderTarget& p_target, daedalus::Cell p_player)
+  auto centerView = [](sf::RenderTarget& p_target, sf::Vector2f p_center)
   {
     auto view = p_target.getView();
-    view.setCenter(p_player.column * daedalus::Cell::PIXELS, p_player.row * daedalus::Cell::PIXELS);
+    view.setCenter(p_center);
     p_target.setView(view);
   };
-  centerOnPlayer(window, maze.getPlayer());
+  centerView(window, maze.getVisibleCenter());
 
   sf::Clock clock;
+  sf::Clock deltaClock;
   while (window.isOpen())
   {
     sf::Event event;
@@ -113,11 +114,6 @@ int main()
       {
         switch (event.key.code)
         {
-          case sf::Keyboard::Num0:
-          {
-            centerOnPlayer(window, maze.getPlayer());
-            break;
-          }
           case sf::Keyboard::Up:
           {
             maze.movePlayer(daedalus::Direction::North);
@@ -144,7 +140,7 @@ int main()
             {
               maze = daedalus::Generator{sizeDist(rng), sizeDist(rng)}.primMaze();
               clock.restart();
-              centerOnPlayer(window, maze.getPlayer());
+              centerView(window, maze.getVisibleCenter());
             }
             break;
           }
@@ -155,8 +151,15 @@ int main()
     }
 
     window.clear();
+
+    auto const maxDelta = 0.01f * deltaClock.getElapsedTime().asSeconds();
+    auto deltaCenter = maze.getVisibleCenter() - window.getView().getCenter();
+    deltaCenter = {std::clamp(deltaCenter.x, -maxDelta, maxDelta), std::clamp(deltaCenter.y, -maxDelta, maxDelta)};
+    centerView(window, window.getView().getCenter() + deltaCenter);
     window.draw(maze);
+
     drawHUD(clock, window, maze);
+
     window.display();
   }
 

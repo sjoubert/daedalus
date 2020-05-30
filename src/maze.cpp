@@ -172,11 +172,6 @@ void Maze::setPlayer(Cell p_cell)
   }
 }
 
-Cell Maze::getPlayer() const
-{
-  return m_player;
-}
-
 void Maze::movePlayer(Direction p_direction)
 {
   if (getSeparation(m_player, p_direction) != daedalus::Separation::Empty)
@@ -385,6 +380,31 @@ void Maze::draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const
       }
     }
   }
+}
+
+sf::Vector2f Maze::getVisibleCenter() const
+{
+  std::pair<std::size_t, std::size_t> rowBounds{getWidth(), 0};
+  std::pair<std::size_t, std::size_t> colBounds{getHeight(), 0};
+  for (std::size_t row = 0; row < getHeight(); ++row)
+  {
+    for (std::size_t col = 0; col < getWidth(); ++col)
+    {
+      if (not m_fog[row][col])
+      {
+        rowBounds.first = std::min(rowBounds.first, row);
+        rowBounds.second = std::max(rowBounds.second, row);
+        colBounds.first = std::min(colBounds.first, col);
+        colBounds.second = std::max(colBounds.second, col);
+      }
+    }
+  }
+
+  sf::Vector2f center(colBounds.first, rowBounds.first);
+  center += {(colBounds.second - colBounds.first) / 2.f, (rowBounds.second - rowBounds.first) / 2.f};
+  center += {0.5f, 0.5f};
+  center *= static_cast<float>(Cell::PIXELS);
+  return getTransform().transformPoint(center);
 }
 
 }
