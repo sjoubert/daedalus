@@ -63,7 +63,6 @@ void StartScreen::run()
     {
       return;
     }
-    ImGui::SetItemDefaultFocus();
     if (ImGui::Button("Quit", buttonWidth))
     {
       m_window.close();
