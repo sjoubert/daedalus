@@ -19,7 +19,7 @@ static constexpr int OFFSET = 10;
 
 void drawHUD(sf::Clock const& p_clock, sf::RenderWindow& p_window, daedalus::Maze const& p_maze)
 {
-  auto const timeRatio = p_clock.getElapsedTime().asSeconds() / (p_maze.getWidth() * p_maze.getHeight());
+  auto const timeRatio = p_clock.getElapsedTime().asSeconds() / (0.5f * p_maze.getWidth() * p_maze.getHeight());
   if (timeRatio > 1)
   {
     p_window.close();
