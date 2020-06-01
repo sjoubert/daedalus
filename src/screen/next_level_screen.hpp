@@ -12,7 +12,7 @@ class NextLevelScreen
 public:
   NextLevelScreen(sf::RenderWindow& p_window, bool p_withBonus);
 
-  void run();
+  std::unique_ptr<Screen> run() override;
 
 private:
   bool m_withBonus;

@@ -1,6 +1,7 @@
 #include "start_screen.hpp"
 
 #include "generator.hpp"
+#include "level_screen.hpp"
 
 #include <SFML/Window/Event.hpp>
 
@@ -17,7 +18,7 @@ StartScreen::StartScreen(sf::RenderWindow& p_window)
 {
 }
 
-void StartScreen::run()
+std::unique_ptr<Screen> StartScreen::run()
 {
   auto size = getWindow().getSize();
   auto maze = daedalus::Generator{size.x / Cell::PIXELS, size.y / Cell::PIXELS}.primMaze();
@@ -54,7 +55,7 @@ void StartScreen::run()
     ImVec2 buttonWidth{200, 0};
     if (ImGui::Button("Start new game", buttonWidth))
     {
-      return;
+      return std::make_unique<LevelScreen>(getWindow(), 0.5f, std::pair<std::size_t, std::size_t>{10, 15});
     }
     if (ImGui::Button("Quit", buttonWidth))
     {
@@ -69,6 +70,8 @@ void StartScreen::run()
     ImGui::SFML::Render(getWindow());
     getWindow().display();
   }
+
+  return {};
 }
 
 }

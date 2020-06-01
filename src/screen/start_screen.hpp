@@ -12,7 +12,7 @@ class StartScreen
 public:
   StartScreen(sf::RenderWindow& p_window);
 
-  void run();
+  std::unique_ptr<Screen> run() override;
 };
 
 }

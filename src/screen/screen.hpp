@@ -3,6 +3,8 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 
+#include <memory>
+
 namespace daedalus
 {
 
@@ -10,9 +12,9 @@ class Screen
 {
 public:
   Screen(sf::RenderWindow& p_window);
-  ~Screen();
+  virtual ~Screen();
 
-  virtual void run() = 0;
+  virtual std::unique_ptr<Screen> run() = 0;
 
 protected:
   sf::RenderWindow& getWindow();

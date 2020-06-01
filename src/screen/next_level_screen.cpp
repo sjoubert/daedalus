@@ -14,7 +14,7 @@ NextLevelScreen::NextLevelScreen(sf::RenderWindow& p_window, bool p_withBonus)
 {
 }
 
-void NextLevelScreen::run()
+std::unique_ptr<Screen> NextLevelScreen::run()
 {
   float nextLevelButtonSpacing{};
 
@@ -65,7 +65,7 @@ void NextLevelScreen::run()
     ImGui::SameLine();
     if (ImGui::Button("Next Level"))
     {
-      return;
+      return {};
     }
     nextLevelButtonSpacing = (ImGui::GetWindowContentRegionWidth() - ImGui::GetItemRectSize().x) / 2.f;
 
@@ -77,6 +77,8 @@ void NextLevelScreen::run()
     ImGui::SFML::Render(getWindow());
     getWindow().display();
   }
+
+  return {};
 }
 
 }
