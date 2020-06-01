@@ -10,9 +10,12 @@ class NextLevelScreen
   : public Screen
 {
 public:
-  NextLevelScreen(sf::RenderWindow& p_window);
+  NextLevelScreen(sf::RenderWindow& p_window, bool p_withBonus);
 
   void run();
+
+private:
+  bool m_withBonus;
 };
 
 }

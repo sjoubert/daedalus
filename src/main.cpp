@@ -17,9 +17,9 @@
 
 static constexpr int OFFSET = 10;
 
-void drawHUD(sf::Clock const& p_clock, sf::RenderWindow& p_window, daedalus::Maze const& p_maze)
+void drawHUD(sf::Clock const& p_clock, sf::RenderWindow& p_window, daedalus::Maze const& p_maze, float p_allowedTime)
 {
-  auto const timeRatio = p_clock.getElapsedTime().asSeconds() / (0.5f * p_maze.getWidth() * p_maze.getHeight());
+  auto const timeRatio = p_clock.getElapsedTime().asSeconds() / (p_allowedTime * p_maze.getWidth() * p_maze.getHeight());
   if (timeRatio > 1)
   {
     p_window.close();
@@ -91,6 +91,7 @@ int main()
   std::mt19937 rng(std::random_device{}());
   std::uniform_int_distribution<std::size_t> sizeDist(10, 15);
   auto maze = daedalus::Generator{sizeDist(rng), sizeDist(rng)}.primMaze();
+  float allowedTime = 0.5f;
 
   auto centerView = [](sf::RenderTarget& p_target, sf::Vector2f p_center)
   {
@@ -140,9 +141,15 @@ int main()
             if (maze.hasWon())
             {
               {
-                daedalus::NextLevelScreen nextLevelScreen(window);
+                daedalus::NextLevelScreen nextLevelScreen(window, maze.hasBonus());
                 nextLevelScreen.run();
               }
+
+              if (maze.hasBonus())
+              {
+                allowedTime += 0.1;
+              }
+              sizeDist = std::uniform_int_distribution<std::size_t>(sizeDist.min() + 1, sizeDist.max() + 1);
 
               maze = daedalus::Generator{sizeDist(rng), sizeDist(rng)}.primMaze();
               clock.restart();
@@ -164,7 +171,7 @@ int main()
     centerView(window, window.getView().getCenter() + deltaCenter);
     window.draw(maze);
 
-    drawHUD(clock, window, maze);
+    drawHUD(clock, window, maze, allowedTime);
 
     window.display();
   }
