@@ -60,12 +60,12 @@ void drawHUD(sf::Clock const& p_clock, sf::RenderWindow& p_window, daedalus::Maz
   // Bonus
   if (p_maze.hasBonus())
   {
-    itemStatus.setFillColor(sf::Color::Blue);
+    itemStatus.setFillColor(sf::Color::Yellow);
   }
   else
   {
     itemStatus.setFillColor(sf::Color::Transparent);
-    itemStatus.setOutlineColor(sf::Color::Blue);
+    itemStatus.setOutlineColor(sf::Color::Yellow);
     itemStatus.setOutlineThickness(2);
   }
   itemStatus.move(WIDTH + OFFSET, 0);

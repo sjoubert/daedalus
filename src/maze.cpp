@@ -223,12 +223,12 @@ void Maze::draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const
         }
         case Tile::Key:
         {
-          tile.setFillColor(sf::Color::Yellow);
+          tile.setFillColor(sf::Color::Blue);
           break;
         }
         case Tile::Bonus:
         {
-          tile.setFillColor(sf::Color::Blue);
+          tile.setFillColor(sf::Color::Yellow);
           break;
         }
       }
