@@ -4,16 +4,11 @@
 namespace daedalus
 {
 
-enum class Separation
-{
-  Empty,
-  Border,
-  Wall,
-};
-
 enum class Tile
 {
   Floor,
+  Border,
+  Wall,
   Start,
   ClosedEnd,
   OpenEnd,

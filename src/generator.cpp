@@ -6,11 +6,11 @@ namespace daedalus
 {
 
 Generator::Generator(std::size_t p_width, std::size_t p_height)
-  : m_width(p_width)
-  , m_height(p_height)
+  : m_width((p_width % 2 == 0) ? p_width - 1 : p_width)
+  , m_height((p_height % 2 == 0) ? p_height - 1 : p_height)
   , m_rng(std::random_device{}())
-  , m_rowDist(0, m_height - 1)
-  , m_colDist(0, p_width - 1)
+  , m_rowDist(1, m_height - 2)
+  , m_colDist(1, p_width - 2)
 {
 }
 
@@ -19,16 +19,19 @@ Maze Generator::primMaze()
   Maze maze{m_width, m_height};
 
   // Walls
-  std::vector cells = {Cell{0, 0}};
+  std::vector cells = {Cell{1, 1}};
+  maze.setTile({1, 1}, Tile::Floor);
 
   std::vector<std::pair<Cell, Cell>> walls;
   auto pushBackWalls = [&](Cell const& p_cell)
   {
     for (auto dir: {Direction::North, Direction::South, Direction::East, Direction::West})
     {
-      if (maze.getSeparation(p_cell, dir) == Separation::Wall)
+      auto wallCell = maze.getNextCell(p_cell, dir);
+      auto behindCell = maze.getNextCell(wallCell, dir);
+      if (maze.getTile(wallCell) == Tile::Wall && maze.getTile(behindCell) != Tile::Border)
       {
-        walls.emplace_back(p_cell, maze.getNextCell(p_cell, dir));
+        walls.emplace_back(wallCell, maze.getNextCell(wallCell, dir));
       }
     }
   };
@@ -42,7 +45,9 @@ Maze Generator::primMaze()
 
     if (std::find(cells.begin(), cells.end(), wall.second) == cells.end())
     {
-      maze.setSeparation(wall.first, wall.second, Separation::Empty);
+      maze.setTile(wall.first, Tile::Floor);
+      maze.setTile(wall.second, Tile::Floor);
+      cells.push_back(wall.first);
       cells.push_back(wall.second);
       pushBackWalls(wall.second);
     }

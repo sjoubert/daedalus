@@ -21,7 +21,7 @@ void StartScreen::run()
 {
   auto size = getWindow().getSize();
   auto maze = daedalus::Generator{size.x / Cell::PIXELS, size.y / Cell::PIXELS}.primMaze();
-  maze.setPosition(size.x % Cell::PIXELS / 2., size.y % Cell::PIXELS / 2.);
+  maze.setPosition((size.x - maze.getWidth() * Cell::PIXELS) / 2., (size.y - maze.getHeight() * Cell::PIXELS) / 2.);
   maze.clearFog();
 
   sf::Clock mazeClock;

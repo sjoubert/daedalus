@@ -9,62 +9,26 @@ namespace daedalus
 {
 
 Maze::Maze(std::size_t p_width, std::size_t p_height)
-  : m_eastSeparations{p_height, {p_width - 1, Separation::Wall}}
-  , m_southSeparations{p_height - 1, {p_width, Separation::Wall}}
-  , m_tiles{p_height, {p_width, Tile::Floor}}
+  : m_tiles{p_height, {p_width, Tile::Wall}}
   , m_fog{p_height, std::vector<bool>(p_width, true)}
 {
+  m_tiles.front() = {p_width, Tile::Border};
+  for (auto& row: m_tiles)
+  {
+    row.front() = Tile::Border;
+    row.back() = Tile::Border;
+  }
+  m_tiles.back() = {p_width, Tile::Border};
 }
 
 std::size_t Maze::getWidth() const
 {
-  return m_southSeparations.front().size();
+  return m_tiles.front().size();
 }
 
 std::size_t Maze::getHeight() const
 {
-  return m_eastSeparations.size();
-}
-
-Separation Maze::getSeparation(Cell p_cell, Direction p_direction) const
-{
-  if (auto id = getSeparationData(p_cell, p_direction); id)
-  {
-    return *id;
-  }
-  return Separation::Border;
-}
-
-Separation const* Maze::getSeparationData(Cell p_cell, Direction p_direction) const
-{
-  if ((p_direction == Direction::North && p_cell.row == 0)
-    || (p_direction == Direction::South && p_cell.row == getHeight() - 1)
-    || (p_direction == Direction::West && p_cell.column == 0)
-    || (p_direction == Direction::East && p_cell.column == getWidth() - 1))
-  {
-    return nullptr;
-  }
-
-  auto row = p_cell.row;
-  if (p_direction == Direction::North)
-  {
-    --row;
-  }
-
-  auto col = p_cell.column;
-  if (p_direction == Direction::West)
-  {
-    --col;
-  }
-
-  if (p_direction == Direction::North || p_direction == Direction::South)
-  {
-    return &m_southSeparations[row][col];
-  }
-  else
-  {
-    return &m_eastSeparations[row][col];
-  }
+  return m_tiles.size();
 }
 
 Cell Maze::getNextCell(Cell p_cell, Direction p_direction) const
@@ -99,36 +63,6 @@ Cell Maze::getNextCell(Cell p_cell, Direction p_direction) const
   return {row, col};
 }
 
-void Maze::setSeparation(Cell p_first, Cell p_second, Separation p_separation)
-{
-  assert(p_first.row == p_second.row || p_first.column == p_second.column);
-  assert(p_first.row < getHeight() && p_first.column < getWidth()
-    && p_second.row < getHeight() && p_second.column < getWidth());
-
-  if (p_first.row == p_second.row)
-  {
-    if (p_first.column - 1 == p_second.column)
-    {
-      m_eastSeparations[p_first.row][p_second.column] = p_separation;
-    }
-    else if (p_first.column + 1 == p_second.column)
-    {
-      m_eastSeparations[p_first.row][p_first.column] = p_separation;
-    }
-  }
-  else if (p_first.column == p_second.column)
-  {
-    if (p_first.row - 1 == p_second.row)
-    {
-      m_southSeparations[p_second.row][p_first.column] = p_separation;
-    }
-    else if (p_first.row + 1 == p_second.row)
-    {
-      m_southSeparations[p_first.row][p_first.column] = p_separation;
-    }
-  }
-}
-
 Tile Maze::getTile(Cell p_cell) const
 {
   return m_tiles[p_cell.row][p_cell.column];
@@ -161,20 +95,19 @@ void Maze::setPlayer(Cell p_cell)
       break;
   }
 
-  m_fog[m_player.row][m_player.column] = false;
-  for (auto dir: {Direction::North, Direction::South, Direction::East, Direction::West})
+  for (auto deltaRow: {-1, 0, 1})
   {
-    if (getSeparation(m_player, dir) == Separation::Empty)
+    for (auto deltaCol: {-1, 0, 1})
     {
-      auto nextCell = getNextCell(m_player, dir);
-      m_fog[nextCell.row][nextCell.column] = false;
+      m_fog[m_player.row + deltaRow][m_player.column + deltaCol] = false;
     }
   }
 }
 
 void Maze::movePlayer(Direction p_direction)
 {
-  if (getSeparation(m_player, p_direction) != daedalus::Separation::Empty)
+  auto targetTile = getTile(getNextCell(m_player, p_direction));
+  if (targetTile == Tile::Border || targetTile == Tile::Wall)
   {
     return;
   }
@@ -250,7 +183,7 @@ void Maze::draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const
   sf::Color const fogColor{25, 25, 25};
   p_target.clear(fogColor);
 
-  // Ground
+  // Tiles
   sf::RectangleShape tile({Cell::PIXELS, Cell::PIXELS});
   for (auto row = 0u; row < getHeight(); ++row)
   {
@@ -261,6 +194,16 @@ void Maze::draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const
         case Tile::Floor:
         {
           tile.setFillColor({100, 100, 100});
+          break;
+        }
+        case Tile::Border:
+        {
+          tile.setFillColor(sf::Color::Black);
+          break;
+        }
+        case Tile::Wall:
+        {
+          tile.setFillColor({160, 100, 40});
           break;
         }
         case Tile::Start:
@@ -303,72 +246,8 @@ void Maze::draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const
   player.setPosition((m_player.column + 0.5) * daedalus::Cell::PIXELS, (m_player.row + 0.5) * daedalus::Cell::PIXELS);
   p_target.draw(player, p_states);
 
-  sf::RectangleShape wall(sf::Vector2f(Cell::PIXELS, 4));
-  wall.setFillColor(sf::Color::Black);
-
-  // Horizontal
-  wall.setRotation(0);
-  wall.setOrigin(0, wall.getSize().y / 2);
-  // Borders
-  for (auto col = 0u; col < getWidth(); ++col)
-  {
-    wall.setPosition(col * Cell::PIXELS, 0);
-    p_target.draw(wall, p_states);
-    wall.setPosition(col * Cell::PIXELS, getHeight() * Cell::PIXELS);
-    p_target.draw(wall, p_states);
-  }
-  // Separations
-  for (auto row = 1u; row < getHeight(); ++row)
-  {
-    for (auto col = 0u; col < getWidth(); ++col)
-    {
-      if (getSeparation({row, col}, daedalus::Direction::North) != daedalus::Separation::Empty)
-      {
-        wall.setPosition(col * Cell::PIXELS, row * Cell::PIXELS);
-        p_target.draw(wall, p_states);
-      }
-    }
-  }
-
-  // Vertical
-  wall.setRotation(90);
-  // Borders
-  for (auto row = 0u; row < getHeight(); ++row)
-  {
-    wall.setPosition(0, row * Cell::PIXELS);
-    p_target.draw(wall, p_states);
-    wall.setPosition(getWidth() * Cell::PIXELS, row * Cell::PIXELS);
-    p_target.draw(wall, p_states);
-  }
-  // separations
-  for (auto row = 0u; row < getHeight(); ++row)
-  {
-    for (auto col = 1u; col < getWidth(); ++col)
-    {
-      if (getSeparation({row, col}, daedalus::Direction::West) != daedalus::Separation::Empty)
-      {
-        wall.setPosition(col * Cell::PIXELS, row * Cell::PIXELS);
-        p_target.draw(wall, p_states);
-      }
-    }
-  }
-
   // Fog of war
   tile.setFillColor(fogColor);
-  for (auto row = -1; row <= static_cast<decltype(row)>(getHeight()); ++row)
-  {
-    tile.setPosition(- Cell::PIXELS, row * Cell::PIXELS);
-    p_target.draw(tile, p_states);
-    tile.setPosition(getWidth() * Cell::PIXELS, row * Cell::PIXELS);
-    p_target.draw(tile, p_states);
-  }
-  for (auto col = -1; col <= static_cast<decltype(col)>(getWidth()); ++col)
-  {
-    tile.setPosition(col * Cell::PIXELS, - Cell::PIXELS);
-    p_target.draw(tile, p_states);
-    tile.setPosition(col * Cell::PIXELS, getHeight() * Cell::PIXELS);
-    p_target.draw(tile, p_states);
-  }
   for (auto row = 0u; row < getHeight(); ++row)
   {
     for (auto col = 0u; col < getWidth(); ++col)

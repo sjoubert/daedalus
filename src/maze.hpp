@@ -23,9 +23,7 @@ public:
   std::size_t getWidth() const;
   std::size_t getHeight() const;
 
-  Separation getSeparation(Cell p_cell, Direction p_direction) const;
   Cell getNextCell(Cell p_cell, Direction p_direction) const;
-  void setSeparation(Cell p_first, Cell p_second, Separation p_separation);
 
   Tile getTile(Cell p_cell) const;
   void setTile(Cell p_cell, Tile p_tile);
@@ -43,12 +41,7 @@ public:
   sf::Vector2f getVisibleCenter() const;
 
 private:
-  Separation const* getSeparationData(Cell p_cell, Direction p_direction) const;
   void openDoor();
-
-  using SeparationGrid = std::vector<std::vector<Separation>>;
-  SeparationGrid m_eastSeparations;
-  SeparationGrid m_southSeparations;
 
   std::vector<std::vector<Tile>> m_tiles;
   std::vector<std::vector<bool>> m_fog;
