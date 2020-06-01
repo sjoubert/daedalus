@@ -16,7 +16,7 @@ public:
   std::unique_ptr<Screen> run() override;
 
 private:
-  void drawHUD(sf::Clock const& p_clock);
+  void drawHUD(float p_timeRatio);
 
   Maze m_maze;
   float m_allowedTime;

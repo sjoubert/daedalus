@@ -103,7 +103,13 @@ std::unique_ptr<Screen> LevelScreen::run()
     centerView(getWindow(), getWindow().getView().getCenter() + deltaCenter);
     getWindow().draw(m_maze);
 
-    drawHUD(clock);
+    auto const timeRatio =
+      clock.getElapsedTime().asSeconds() / (m_allowedTime * m_maze.getWidth() * m_maze.getHeight());
+    if (timeRatio > 1)
+    {
+      getWindow().close();
+    }
+    drawHUD(timeRatio);
 
     getWindow().display();
   }
@@ -111,20 +117,12 @@ std::unique_ptr<Screen> LevelScreen::run()
   return {};
 }
 
-void LevelScreen::drawHUD(sf::Clock const& p_clock)
+void LevelScreen::drawHUD(float p_timeRatio)
 {
-  constexpr int OFFSET = 10;
-
-  auto const timeRatio =
-    p_clock.getElapsedTime().asSeconds() / (m_allowedTime * m_maze.getWidth() * m_maze.getHeight());
-  if (timeRatio > 1)
-  {
-    getWindow().close();
-  }
-
   auto saveView = getWindow().getView();
   getWindow().setView(getWindow().getDefaultView());
 
+  constexpr int OFFSET = 10;
   constexpr int WIDTH = 25;
   auto const height = getWindow().getSize().y - 2.0f * OFFSET;
 
@@ -134,11 +132,11 @@ void LevelScreen::drawHUD(sf::Clock const& p_clock)
   timer.setFillColor({130, 200, 50});
   getWindow().draw(timer);
 
-  if (timeRatio < 0.33)
+  if (p_timeRatio < 0.33)
   {
     timer.setFillColor({255, 230, 120});
   }
-  else if (timeRatio < 0.66)
+  else if (p_timeRatio < 0.66)
   {
     timer.setFillColor({200, 100, 50});
   }
@@ -146,7 +144,7 @@ void LevelScreen::drawHUD(sf::Clock const& p_clock)
   {
     timer.setFillColor({240, 80, 90});
   }
-  timer.setSize({WIDTH , height * timeRatio});
+  timer.setSize({WIDTH , height * p_timeRatio});
   getWindow().draw(timer);
 
   sf::RectangleShape itemStatus({daedalus::Cell::PIXELS, daedalus::Cell::PIXELS});
