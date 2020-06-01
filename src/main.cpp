@@ -77,7 +77,7 @@ void drawHUD(sf::Clock const& p_clock, sf::RenderWindow& p_window, daedalus::Maz
 
 int main()
 {
-  sf::RenderWindow window({1024, 640}, "Daedalus");
+  sf::RenderWindow window({1366, 768}, "Daedalus");
   ImGui::SFML::Init(window);
   auto& io = ImGui::GetIO();
   io.IniFilename = nullptr;
