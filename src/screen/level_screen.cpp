@@ -97,7 +97,7 @@ std::unique_ptr<Screen> LevelScreen::run()
 
     getWindow().clear();
 
-    auto const maxDelta = 0.01f * deltaClock.getElapsedTime().asSeconds();
+    auto const maxDelta = Cell::PIXELS * deltaClock.restart().asSeconds();
     auto deltaCenter = m_maze.getVisibleCenter() - getWindow().getView().getCenter();
     deltaCenter = {std::clamp(deltaCenter.x, -maxDelta, maxDelta), std::clamp(deltaCenter.y, -maxDelta, maxDelta)};
     centerView(getWindow(), getWindow().getView().getCenter() + deltaCenter);
