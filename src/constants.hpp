@@ -12,7 +12,7 @@ enum class Tile
   Start,
   ClosedEnd,
   OpenEnd,
-  Key,
+  Lever,
   Bonus,
 };
 

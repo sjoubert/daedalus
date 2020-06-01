@@ -58,7 +58,7 @@ Maze Generator::primMaze()
   maze.setTile(startCell, Tile::Start);
   maze.setPlayer(startCell);
   maze.setTile(randomEmptyCell(maze), Tile::ClosedEnd);
-  maze.setTile(randomEmptyCell(maze), Tile::Key);
+  maze.setTile(randomEmptyCell(maze), Tile::Lever);
   maze.setTile(randomEmptyCell(maze), Tile::Bonus);
 
   return maze;

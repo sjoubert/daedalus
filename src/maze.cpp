@@ -79,7 +79,7 @@ void Maze::setPlayer(Cell p_cell)
 
   switch (getTile(m_player))
   {
-    case Tile::Key:
+    case Tile::Lever:
     {
       openDoor();
       setTile(m_player, Tile::Floor);
@@ -221,7 +221,7 @@ void Maze::draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const
           tile.setFillColor(sf::Color::Green);
           break;
         }
-        case Tile::Key:
+        case Tile::Lever:
         {
           tile.setFillColor(sf::Color::Blue);
           break;
