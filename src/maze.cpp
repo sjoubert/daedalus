@@ -63,7 +63,7 @@ Cell Maze::getNextCell(Cell p_cell, Direction p_direction) const
   return {row, col};
 }
 
-Tile Maze::getTile(Cell p_cell) const
+Maze::Tile Maze::getTile(Cell p_cell) const
 {
   return m_tiles[p_cell.row][p_cell.column];
 }
@@ -239,11 +239,11 @@ void Maze::draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const
   }
 
   // Player
-  auto const playerRadius = daedalus::Cell::PIXELS / 2 * 0.7;
+  auto const playerRadius = Cell::PIXELS / 2 * 0.7;
   sf::CircleShape player(playerRadius);
   player.setOrigin(playerRadius, playerRadius);
   player.setFillColor(sf::Color::Cyan);
-  player.setPosition((m_player.column + 0.5) * daedalus::Cell::PIXELS, (m_player.row + 0.5) * daedalus::Cell::PIXELS);
+  player.setPosition((m_player.column + 0.5) * Cell::PIXELS, (m_player.row + 0.5) * Cell::PIXELS);
   p_target.draw(player, p_states);
 
   // Fog of war

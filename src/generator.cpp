@@ -20,16 +20,16 @@ Maze Generator::primMaze()
 
   // Walls
   std::vector cells = {Cell{1, 1}};
-  maze.setTile({1, 1}, Tile::Floor);
+  maze.setTile({1, 1}, Maze::Tile::Floor);
 
   std::vector<std::pair<Cell, Cell>> walls;
   auto pushBackWalls = [&](Cell const& p_cell)
   {
-    for (auto dir: {Direction::North, Direction::South, Direction::East, Direction::West})
+    for (auto dir: {Maze::Direction::North, Maze::Direction::South, Maze::Direction::East, Maze::Direction::West})
     {
       auto wallCell = maze.getNextCell(p_cell, dir);
       auto behindCell = maze.getNextCell(wallCell, dir);
-      if (maze.getTile(wallCell) == Tile::Wall && maze.getTile(behindCell) != Tile::Border)
+      if (maze.getTile(wallCell) == Maze::Tile::Wall && maze.getTile(behindCell) != Maze::Tile::Border)
       {
         walls.emplace_back(wallCell, maze.getNextCell(wallCell, dir));
       }
@@ -45,8 +45,8 @@ Maze Generator::primMaze()
 
     if (std::find(cells.begin(), cells.end(), wall.second) == cells.end())
     {
-      maze.setTile(wall.first, Tile::Floor);
-      maze.setTile(wall.second, Tile::Floor);
+      maze.setTile(wall.first, Maze::Tile::Floor);
+      maze.setTile(wall.second, Maze::Tile::Floor);
       cells.push_back(wall.first);
       cells.push_back(wall.second);
       pushBackWalls(wall.second);
@@ -55,11 +55,11 @@ Maze Generator::primMaze()
 
   // Cells
   auto startCell = randomEmptyCell(maze);
-  maze.setTile(startCell, Tile::Start);
+  maze.setTile(startCell, Maze::Tile::Start);
   maze.setPlayer(startCell);
-  maze.setTile(randomEmptyCell(maze), Tile::ClosedEnd);
-  maze.setTile(randomEmptyCell(maze), Tile::Lever);
-  maze.setTile(randomEmptyCell(maze), Tile::Bonus);
+  maze.setTile(randomEmptyCell(maze), Maze::Tile::ClosedEnd);
+  maze.setTile(randomEmptyCell(maze), Maze::Tile::Lever);
+  maze.setTile(randomEmptyCell(maze), Maze::Tile::Bonus);
 
   return maze;
 }
@@ -72,7 +72,7 @@ Cell Generator::randomCell()
 Cell Generator::randomEmptyCell(Maze const& p_maze)
 {
   auto cell = randomCell();
-  while (p_maze.getTile(cell) != Tile::Floor)
+  while (p_maze.getTile(cell) != Maze::Tile::Floor)
   {
     cell = randomCell();
   }

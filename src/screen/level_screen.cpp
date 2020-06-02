@@ -53,22 +53,22 @@ std::unique_ptr<Screen> LevelScreen::run()
         {
           case sf::Keyboard::Up:
           {
-            m_maze.movePlayer(daedalus::Direction::North);
+            m_maze.movePlayer(Maze::Direction::North);
             break;
           }
           case sf::Keyboard::Down:
           {
-            m_maze.movePlayer(daedalus::Direction::South);
+            m_maze.movePlayer(Maze::Direction::South);
             break;
           }
           case sf::Keyboard::Right:
           {
-            m_maze.movePlayer(daedalus::Direction::East);
+            m_maze.movePlayer(Maze::Direction::East);
             break;
           }
           case sf::Keyboard::Left:
           {
-            m_maze.movePlayer(daedalus::Direction::West);
+            m_maze.movePlayer(Maze::Direction::West);
             break;
           }
           case sf::Keyboard::Space:
@@ -76,7 +76,7 @@ std::unique_ptr<Screen> LevelScreen::run()
             if (m_maze.hasWon())
             {
               {
-                daedalus::NextLevelScreen nextLevelScreen(getWindow(), m_maze.hasBonus());
+                NextLevelScreen nextLevelScreen(getWindow(), m_maze.hasBonus());
                 nextLevelScreen.run();
               }
 
@@ -147,7 +147,7 @@ void LevelScreen::drawHUD(float p_timeRatio)
   timer.setSize({WIDTH , height * p_timeRatio});
   getWindow().draw(timer);
 
-  sf::RectangleShape itemStatus({daedalus::Cell::PIXELS, daedalus::Cell::PIXELS});
+  sf::RectangleShape itemStatus({Cell::PIXELS, Cell::PIXELS});
   // Door
   itemStatus.setFillColor(m_maze.doorIsOpen() ? sf::Color::Green : sf::Color::Red);
   itemStatus.setPosition({OFFSET, OFFSET});

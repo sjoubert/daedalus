@@ -21,12 +21,13 @@ StartScreen::StartScreen(sf::RenderWindow& p_window)
 std::unique_ptr<Screen> StartScreen::run()
 {
   auto size = getWindow().getSize();
-  auto maze = daedalus::Generator{size.x / Cell::PIXELS, size.y / Cell::PIXELS}.primMaze();
+  auto maze = Generator{size.x / Cell::PIXELS, size.y / Cell::PIXELS}.primMaze();
   maze.setPosition((size.x - maze.getWidth() * Cell::PIXELS) / 2., (size.y - maze.getHeight() * Cell::PIXELS) / 2.);
   maze.clearFog();
 
   sf::Clock mazeClock;
-  constexpr std::array directions{Direction::North, Direction::South, Direction::East, Direction::West};
+  constexpr std::array directions =
+    {Maze::Direction::North, Maze::Direction::South, Maze::Direction::East, Maze::Direction::West};
   std::mt19937 rng(std::random_device{}());
   std::uniform_int_distribution<> dist(0, directions.size());
 

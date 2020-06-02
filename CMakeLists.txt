@@ -10,7 +10,6 @@ include(common_options)
 
 add_executable(daedalus
   src/cell.hpp
-  src/constants.hpp
   src/generator.hpp
   src/generator.cpp
   src/main.cpp

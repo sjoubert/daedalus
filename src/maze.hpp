@@ -1,7 +1,6 @@
 #ifndef DAEDALUS_MAZE_HPP
 #define DAEDALUS_MAZE_HPP
 
-#include "constants.hpp"
 #include "cell.hpp"
 
 #include <SFML/Graphics/Drawable.hpp>
@@ -18,6 +17,26 @@ class Maze
   , public sf::Transformable
 {
 public:
+  enum class Tile
+  {
+    Floor,
+    Border,
+    Wall,
+    Start,
+    ClosedEnd,
+    OpenEnd,
+    Lever,
+    Bonus,
+  };
+
+  enum class Direction
+  {
+    North,
+    East,
+    South,
+    West,
+  };
+
   Maze(std::size_t p_width, std::size_t p_height);
 
   std::size_t getWidth() const;

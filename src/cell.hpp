@@ -1,8 +1,6 @@
 #ifndef DEADALUS_CELL_HPP
 #define DEADALUS_CELL_HPP
 
-#include "constants.hpp"
-
 #include <compare>
 #include <cstddef>
 
