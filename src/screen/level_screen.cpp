@@ -12,17 +12,10 @@
 namespace daedalus
 {
 
-LevelScreen::LevelScreen(sf::RenderWindow& p_window, float p_allowedTime,
-  std::pair<std::size_t, std::size_t> p_size)
+LevelScreen::LevelScreen(sf::RenderWindow& p_window, RunState p_state)
   : Screen(p_window)
-  , m_maze([p_size]()
-    {
-      std::mt19937 rng(std::random_device{}());
-      std::uniform_int_distribution<std::size_t> sizeDist(p_size.first, p_size.second);
-      return Generator{sizeDist(rng), sizeDist(rng)}.primMaze();
-    }())
-  , m_allowedTime(p_allowedTime)
-  , m_size(p_size)
+  , m_state(std::move(p_state))
+  , m_maze(Generator{m_state.newWidth(), m_state.newHeight()}.primMaze())
 {
 }
 
@@ -75,17 +68,8 @@ std::unique_ptr<Screen> LevelScreen::run()
           {
             if (m_maze.hasWon())
             {
-              {
-                NextLevelScreen nextLevelScreen(getWindow(), m_maze.hasBonus());
-                nextLevelScreen.run();
-              }
-
-              if (m_maze.hasBonus())
-              {
-                m_allowedTime += 0.1;
-              }
-              return std::make_unique<LevelScreen>(getWindow(), m_allowedTime,
-                std::pair<std::size_t, std::size_t>{m_size.first + 1, m_size.second + 1});
+              m_state.setBonus(m_maze.hasBonus());
+              return std::make_unique<NextLevelScreen>(getWindow(), m_state);
             }
             break;
           }
@@ -104,7 +88,7 @@ std::unique_ptr<Screen> LevelScreen::run()
     getWindow().draw(m_maze);
 
     auto const timeRatio =
-      clock.getElapsedTime().asSeconds() / (m_allowedTime * m_maze.getWidth() * m_maze.getHeight());
+      clock.getElapsedTime().asSeconds() / (m_state.getTimeFactor() * m_maze.getWidth() * m_maze.getHeight());
     if (timeRatio > 1)
     {
       getWindow().close();

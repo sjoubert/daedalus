@@ -51,7 +51,7 @@ std::unique_ptr<Screen> StartScreen::run()
     ImVec2 buttonWidth{200, 0};
     if (ImGui::Button("Start new game", buttonWidth))
     {
-      return std::make_unique<LevelScreen>(getWindow(), 0.5f, std::pair<std::size_t, std::size_t>{10, 15});
+      return std::make_unique<LevelScreen>(getWindow());
     }
     if (ImGui::Button("Quit", buttonWidth))
     {

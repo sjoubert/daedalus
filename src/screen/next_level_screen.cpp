@@ -1,5 +1,7 @@
 #include "next_level_screen.hpp"
 
+#include "level_screen.hpp"
+
 #include <SFML/Window/Event.hpp>
 
 #include "imgui.h"
@@ -8,9 +10,9 @@
 namespace daedalus
 {
 
-NextLevelScreen::NextLevelScreen(sf::RenderWindow& p_window, bool p_withBonus)
+NextLevelScreen::NextLevelScreen(sf::RenderWindow& p_window, RunState p_state)
   : Screen(p_window)
-  , m_withBonus(p_withBonus)
+  , m_state(std::move(p_state))
 {
 }
 
@@ -38,7 +40,7 @@ std::unique_ptr<Screen> NextLevelScreen::run()
 
     ImGui::Columns(2, nullptr, false);
 
-    if (m_withBonus)
+    if (m_state.hasBonus())
     {
       ImGui::Text("Bonus:");
       ImGui::Bullet();
@@ -65,7 +67,12 @@ std::unique_ptr<Screen> NextLevelScreen::run()
     ImGui::SameLine();
     if (ImGui::Button("Next Level"))
     {
-      return {};
+      if (m_state.hasBonus())
+      {
+        m_state.increaseTimeFactor();
+      }
+      m_state.increaseSize();
+      return std::make_unique<LevelScreen>(getWindow(), m_state);
     }
     nextLevelButtonSpacing = (ImGui::GetWindowContentRegionWidth() - ImGui::GetItemRectSize().x) / 2.f;
 

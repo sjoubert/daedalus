@@ -15,6 +15,8 @@ add_executable(daedalus
   src/main.cpp
   src/maze.hpp
   src/maze.cpp
+  src/run_state.hpp
+  src/run_state.cpp
   src/screen/level_screen.hpp
   src/screen/level_screen.cpp
   src/screen/next_level_screen.hpp
