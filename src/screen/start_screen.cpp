@@ -13,11 +13,6 @@
 namespace daedalus
 {
 
-StartScreen::StartScreen(sf::RenderWindow& p_window)
-  : Screen(p_window)
-{
-}
-
 std::unique_ptr<Screen> StartScreen::run()
 {
   auto size = getWindow().getSize();

@@ -10,7 +10,7 @@ class StartScreen
   : public Screen
 {
 public:
-  StartScreen(sf::RenderWindow& p_window);
+  using Screen::Screen;
 
   std::unique_ptr<Screen> run() override;
 };
