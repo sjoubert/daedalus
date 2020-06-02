@@ -12,7 +12,7 @@ class Screen
 {
 public:
   Screen(sf::RenderWindow& p_window);
-  virtual ~Screen();
+  virtual ~Screen() = default;
 
   virtual std::unique_ptr<Screen> run() = 0;
 
@@ -21,7 +21,6 @@ protected:
 
 private:
   sf::RenderWindow& m_window;
-  sf::View m_savedView;
 };
 
 }

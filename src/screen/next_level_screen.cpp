@@ -72,6 +72,7 @@ std::unique_ptr<Screen> NextLevelScreen::run()
         m_state.increaseTimeFactor();
       }
       m_state.increaseSize();
+      m_state.nextLevel();
       return std::make_unique<LevelScreen>(getWindow(), m_state);
     }
     nextLevelButtonSpacing = (ImGui::GetWindowContentRegionWidth() - ImGui::GetItemRectSize().x) / 2.f;

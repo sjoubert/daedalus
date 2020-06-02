@@ -38,4 +38,14 @@ void RunState::setBonus(bool p_bonus)
   m_bonus = p_bonus;
 }
 
+int RunState::currentLevel() const
+{
+  return m_level;
+}
+
+void RunState::nextLevel()
+{
+  ++m_level;
+}
+
 }

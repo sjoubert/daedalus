@@ -2,6 +2,7 @@
 
 #include "generator.hpp"
 #include "next_level_screen.hpp"
+#include "lost_screen.hpp"
 
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/System/Clock.hpp>
@@ -79,6 +80,13 @@ std::unique_ptr<Screen> LevelScreen::run()
       }
     }
 
+    auto const timeRatio =
+      clock.getElapsedTime().asSeconds() / (m_state.getTimeFactor() * m_maze.getWidth() * m_maze.getHeight());
+    if (timeRatio > 1)
+    {
+      return std::make_unique<LostScreen>(getWindow(), m_state.currentLevel());
+    }
+
     getWindow().clear();
 
     auto const maxDelta = Cell::PIXELS * deltaClock.restart().asSeconds();
@@ -87,12 +95,6 @@ std::unique_ptr<Screen> LevelScreen::run()
     centerView(getWindow(), getWindow().getView().getCenter() + deltaCenter);
     getWindow().draw(m_maze);
 
-    auto const timeRatio =
-      clock.getElapsedTime().asSeconds() / (m_state.getTimeFactor() * m_maze.getWidth() * m_maze.getHeight());
-    if (timeRatio > 1)
-    {
-      getWindow().close();
-    }
     drawHUD(timeRatio);
 
     getWindow().display();

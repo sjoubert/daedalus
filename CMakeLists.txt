@@ -19,6 +19,8 @@ add_executable(daedalus
   src/run_state.cpp
   src/screen/level_screen.hpp
   src/screen/level_screen.cpp
+  src/screen/lost_screen.hpp
+  src/screen/lost_screen.cpp
   src/screen/next_level_screen.hpp
   src/screen/next_level_screen.cpp
   src/screen/screen.hpp

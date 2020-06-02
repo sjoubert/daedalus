@@ -19,6 +19,9 @@ public:
   bool hasBonus() const;
   void setBonus(bool p_bonus);
 
+  int currentLevel() const;
+  void nextLevel();
+
 private:
   std::mt19937 m_rng{std::random_device{}()};
   std::uniform_int_distribution<std::size_t> m_sizeDist{10, 15};
@@ -26,6 +29,8 @@ private:
   float m_timeFactor{0.5};
 
   bool m_bonus{false};
+
+  int m_level{1};
 };
 
 }
