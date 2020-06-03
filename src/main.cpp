@@ -10,6 +10,7 @@
 int main()
 {
   sf::RenderWindow window({1366, 768}, "Daedalus");
+  window.setVerticalSyncEnabled(true);
   ImGui::SFML::Init(window);
   auto& io = ImGui::GetIO();
   io.IniFilename = nullptr;
