@@ -20,6 +20,13 @@ std::unique_ptr<Screen> NextLevelScreen::run()
 {
   float nextLevelButtonSpacing{};
 
+  auto bonus = m_state.getBonus();
+  auto malus = m_state.getMalus();
+  for (auto& item: malus)
+  {
+    item.getSelected() = true;
+  }
+
   sf::Clock deltaClock;
   while (getWindow().isOpen())
   {
@@ -40,22 +47,36 @@ std::unique_ptr<Screen> NextLevelScreen::run()
 
     ImGui::Columns(2, nullptr, false);
 
-    if (m_state.hasBonus())
+    if (bonus.empty())
     {
-      ImGui::Text("Bonus:");
-      ImGui::Bullet();
-      ImGui::Selectable("Allowed time increase", true);
+      ImGui::Text("No bonus found!");
     }
     else
     {
-      ImGui::Text("No bonus found!");
+      ImGui::Text("Bonus:");
+      for (auto& item: bonus)
+      {
+        ImGui::Bullet();
+        ImGui::Selectable(item.getName().c_str(), &item.getSelected());
+        if (ImGui::IsItemHovered())
+        {
+          ImGui::SetTooltip("%s", item.getText().c_str());
+        }
+      }
     }
 
     ImGui::NextColumn();
 
     ImGui::Text("Malus:");
-    ImGui::Bullet();
-    ImGui::Selectable("Maze size increase", true);
+    for (auto& item: malus)
+    {
+      ImGui::Bullet();
+      ImGui::Selectable(item.getName().c_str(), true);
+      if (ImGui::IsItemHovered())
+      {
+        ImGui::SetTooltip("%s", item.getText().c_str());
+      }
+    }
 
     ImGui::Columns(1);
 
@@ -67,12 +88,7 @@ std::unique_ptr<Screen> NextLevelScreen::run()
     ImGui::SameLine();
     if (ImGui::Button("Next Level"))
     {
-      if (m_state.hasBonus())
-      {
-        m_state.increaseTimeFactor();
-      }
-      m_state.increaseSize();
-      m_state.nextLevel();
+      m_state.nextLevel(bonus, malus);
       return std::make_unique<LevelScreen>(getWindow(), m_state);
     }
     nextLevelButtonSpacing = (ImGui::GetWindowContentRegionWidth() - ImGui::GetItemRectSize().x) / 2.f;

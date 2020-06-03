@@ -69,7 +69,10 @@ std::unique_ptr<Screen> LevelScreen::run()
           {
             if (m_maze.hasWon())
             {
-              m_state.setBonus(m_maze.hasBonus());
+              if (m_maze.hasBonus())
+              {
+                m_state.addBonus();
+              }
               return std::make_unique<NextLevelScreen>(getWindow(), m_state);
             }
             break;
