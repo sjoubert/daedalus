@@ -3,7 +3,6 @@
 
 #include "resources.hpp"
 
-#include <SFML/System/Sleep.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
 #include <SFML/Audio/Sound.hpp>
 
