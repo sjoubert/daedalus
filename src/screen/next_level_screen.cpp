@@ -2,6 +2,7 @@
 
 #include "level_screen.hpp"
 #include "resources.hpp"
+#include "gui.hpp"
 
 #include <SFML/Window/Event.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
@@ -94,7 +95,7 @@ std::unique_ptr<Screen> NextLevelScreen::run()
 
     ImGui::Dummy({nextLevelButtonSpacing, -1});
     ImGui::SameLine();
-    if (ImGui::Button("Next Level"))
+    if (Gui::SoundButton("Next Level"))
     {
       m_state.nextLevel(bonus, malus);
       return std::make_unique<LevelScreen>(getWindow(), m_state);

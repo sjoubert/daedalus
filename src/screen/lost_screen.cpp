@@ -2,6 +2,7 @@
 
 #include "start_screen.hpp"
 #include "resources.hpp"
+#include "gui.hpp"
 
 #include <SFML/Window/Event.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
@@ -49,7 +50,7 @@ std::unique_ptr<Screen> LostScreen::run()
 
     ImGui::Dummy({okButtonSpacing, -1});
     ImGui::SameLine();
-    if (ImGui::Button("OK"))
+    if (Gui::SoundButton("OK"))
     {
       return std::make_unique<StartScreen>(getWindow());
     }

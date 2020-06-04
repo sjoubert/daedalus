@@ -12,6 +12,7 @@ add_executable(daedalus
   src/cell.hpp
   src/generator.hpp
   src/generator.cpp
+  src/gui.hpp
   src/item.hpp
   src/item.cpp
   src/items.cpp

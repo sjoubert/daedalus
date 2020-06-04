@@ -2,6 +2,7 @@
 
 #include "generator.hpp"
 #include "level_screen.hpp"
+#include "gui.hpp"
 
 #include <SFML/Window/Event.hpp>
 
@@ -49,11 +50,11 @@ std::unique_ptr<Screen> StartScreen::run()
 
     ImGui::Begin("start_menu", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove);
     ImVec2 buttonWidth{200, 0};
-    if (ImGui::Button("Start new game", buttonWidth))
+    if (Gui::SoundButton("Start new game", buttonWidth))
     {
       return std::make_unique<LevelScreen>(getWindow());
     }
-    if (ImGui::Button("Quit", buttonWidth))
+    if (Gui::SoundButton("Quit", buttonWidth))
     {
       getWindow().close();
     }
