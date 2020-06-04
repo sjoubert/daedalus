@@ -18,6 +18,8 @@ add_executable(daedalus
   src/main.cpp
   src/maze.hpp
   src/maze.cpp
+  src/resources.hpp
+  src/resources.cpp
   src/run_state.hpp
   src/run_state.cpp
   src/screen/level_screen.hpp
@@ -32,10 +34,14 @@ add_executable(daedalus
   src/screen/start_screen.cpp
 )
 target_include_directories(daedalus PRIVATE src/)
+set_source_files_properties(src/resources.cpp PROPERTIES
+  COMPILE_DEFINITIONS DAEDALUS_RESOURCE_PATH="${CMAKE_CURRENT_SOURCE_DIR}/res/"
+)
 
-find_package(SFML COMPONENTS graphics REQUIRED)
+find_package(SFML COMPONENTS graphics audio REQUIRED)
 find_package(ImGui-SFML REQUIRED)
 target_link_libraries(daedalus PRIVATE
   sfml-graphics
+  sfml-audio
   ImGui-SFML::ImGui-SFML
 )

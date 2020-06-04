@@ -1,8 +1,11 @@
 #include "lost_screen.hpp"
 
 #include "start_screen.hpp"
+#include "resources.hpp"
 
 #include <SFML/Window/Event.hpp>
+#include <SFML/Audio/SoundBuffer.hpp>
+#include <SFML/Audio/Sound.hpp>
 
 #include "imgui.h"
 #include "imgui-SFML.h"
@@ -19,6 +22,11 @@ LostScreen::LostScreen(sf::RenderWindow& p_window, int p_lostLevel)
 std::unique_ptr<Screen> LostScreen::run()
 {
   float okButtonSpacing{};
+
+  sf::SoundBuffer tickTockBuffer;
+  tickTockBuffer.loadFromFile(getResource("audio/sad-trombone.wav"));
+  sf::Sound tickTockSound(tickTockBuffer);
+  tickTockSound.play();
 
   sf::Clock deltaClock;
   while (getWindow().isOpen())

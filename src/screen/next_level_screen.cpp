@@ -1,8 +1,11 @@
 #include "next_level_screen.hpp"
 
 #include "level_screen.hpp"
+#include "resources.hpp"
 
 #include <SFML/Window/Event.hpp>
+#include <SFML/Audio/SoundBuffer.hpp>
+#include <SFML/Audio/Sound.hpp>
 
 #include "imgui.h"
 #include "imgui-SFML.h"
@@ -26,6 +29,11 @@ std::unique_ptr<Screen> NextLevelScreen::run()
   {
     item.getSelected() = true;
   }
+
+  sf::SoundBuffer tickTockBuffer;
+  tickTockBuffer.loadFromFile(getResource("audio/ta-da.wav"));
+  sf::Sound tickTockSound(tickTockBuffer);
+  tickTockSound.play();
 
   sf::Clock deltaClock;
   while (getWindow().isOpen())

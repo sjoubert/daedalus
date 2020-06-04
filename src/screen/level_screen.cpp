@@ -3,10 +3,13 @@
 #include "generator.hpp"
 #include "next_level_screen.hpp"
 #include "lost_screen.hpp"
+#include "resources.hpp"
 
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/Window/Event.hpp>
+#include <SFML/Audio/SoundBuffer.hpp>
+#include <SFML/Audio/Sound.hpp>
 
 #include <random>
 
@@ -29,6 +32,12 @@ std::unique_ptr<Screen> LevelScreen::run()
     p_target.setView(view);
   };
   centerView(getWindow(), m_maze.getVisibleCenter());
+
+  sf::SoundBuffer tickTockBuffer;
+  tickTockBuffer.loadFromFile(getResource("audio/tick-tock.wav"));
+  sf::Sound tickTockSound(tickTockBuffer);
+  tickTockSound.setLoop(true);
+  auto const allowedTime = sf::seconds(m_state.getTimeFactor() * m_maze.getWidth() * m_maze.getHeight());
 
   sf::Clock clock;
   sf::Clock deltaClock;
@@ -83,11 +92,16 @@ std::unique_ptr<Screen> LevelScreen::run()
       }
     }
 
-    auto const timeRatio =
-      clock.getElapsedTime().asSeconds() / (m_state.getTimeFactor() * m_maze.getWidth() * m_maze.getHeight());
+
+    auto const timeRatio = clock.getElapsedTime() / allowedTime;
     if (timeRatio > 1)
     {
       return std::make_unique<LostScreen>(getWindow(), m_state.currentLevel());
+    }
+    auto const warningClock = (allowedTime - clock.getElapsedTime()) < sf::seconds(10) && timeRatio > 0.85;
+    if (tickTockSound.getStatus() != sf::SoundSource::Playing && warningClock)
+    {
+      tickTockSound.play();
     }
 
     getWindow().clear();
