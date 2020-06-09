@@ -25,7 +25,7 @@ std::unique_ptr<Screen> StartScreen::run()
   constexpr std::array directions =
     {Maze::Direction::North, Maze::Direction::South, Maze::Direction::East, Maze::Direction::West};
   std::mt19937 rng(std::random_device{}());
-  std::uniform_int_distribution<> dist(0, directions.size());
+  std::uniform_int_distribution<> dist(0, directions.size() - 1);
 
   sf::Clock deltaClock;
   while (getWindow().isOpen())
