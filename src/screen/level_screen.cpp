@@ -126,11 +126,11 @@ void LevelScreen::drawHUD(float p_timeRatio)
   getWindow().setView(getWindow().getDefaultView());
 
   constexpr int OFFSET = 10;
-  constexpr int WIDTH = 25;
-  auto const height = getWindow().getSize().y - 2.0f * OFFSET;
 
-  sf::RectangleShape timer({WIDTH, height});
-  timer.setPosition(getWindow().getSize().x - WIDTH - OFFSET, OFFSET);
+  constexpr int TIMER_WIDTH = 25;
+  auto const height = getWindow().getSize().y - 2.0f * OFFSET;
+  sf::RectangleShape timer({TIMER_WIDTH, height});
+  timer.setPosition(getWindow().getSize().x - TIMER_WIDTH - OFFSET, OFFSET);
 
   timer.setFillColor({130, 200, 50});
   getWindow().draw(timer);
@@ -147,27 +147,17 @@ void LevelScreen::drawHUD(float p_timeRatio)
   {
     timer.setFillColor({240, 80, 90});
   }
-  timer.setSize({WIDTH , height * p_timeRatio});
+  timer.setSize({TIMER_WIDTH , height * p_timeRatio});
   getWindow().draw(timer);
 
-  sf::RectangleShape itemStatus({Cell::PIXELS, Cell::PIXELS});
   // Door
-  itemStatus.setFillColor(m_maze.doorIsOpen() ? sf::Color::Green : sf::Color::Red);
-  itemStatus.setPosition({OFFSET, OFFSET});
-  getWindow().draw(itemStatus);
+  auto door = m_maze.getDoorIndicator();
+  door.setPosition({OFFSET, OFFSET});
+  getWindow().draw(door);
   // Bonus
-  if (m_maze.hasBonus())
-  {
-    itemStatus.setFillColor(sf::Color::Yellow);
-  }
-  else
-  {
-    itemStatus.setFillColor(sf::Color::Transparent);
-    itemStatus.setOutlineColor(sf::Color::Yellow);
-    itemStatus.setOutlineThickness(2);
-  }
-  itemStatus.move(WIDTH + OFFSET, 0);
-  getWindow().draw(itemStatus);
+  auto bonus = m_maze.getBonusIndicator();
+  bonus.setPosition(Cell::PIXELS + 2 * OFFSET, OFFSET);
+  getWindow().draw(bonus);
 
   getWindow().setView(saveView);
 }

@@ -6,8 +6,13 @@
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Audio/SoundBuffer.hpp>
+#include <SFML/Audio/Sound.hpp>
 
 #include <vector>
+#include <unordered_map>
 
 namespace daedalus
 {
@@ -25,7 +30,8 @@ public:
     Start,
     ClosedEnd,
     OpenEnd,
-    Lever,
+    LeverOff,
+    LeverOn,
     Bonus,
   };
 
@@ -51,13 +57,14 @@ public:
   void movePlayer(Direction p_direction);
 
   bool hasWon() const;
-  bool doorIsOpen() const;
   bool hasBonus() const;
 
   void clearFog();
 
   void draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const override;
   sf::Vector2f getVisibleCenter() const;
+  sf::Sprite getDoorIndicator() const;
+  sf::Sprite getBonusIndicator() const;
 
 private:
   void openDoor();
@@ -66,8 +73,29 @@ private:
   std::vector<std::vector<bool>> m_fog;
 
   Cell m_player{};
+  Direction m_playerDirection = Direction::South;
+
   bool m_doorOpen = false;
   bool m_hasBonus = false;
+
+  sf::Texture m_tileset;
+  sf::Sprite m_floorSprite;
+  sf::Sprite m_borderSprite;
+  sf::Sprite m_wallSprite;
+  sf::Sprite m_startSprite;
+  sf::Sprite m_openEndSprite;
+  sf::Sprite m_closedEndSprite;
+  sf::Sprite m_bonusSprite;
+  sf::Sprite m_leverOffSprite;
+  sf::Sprite m_leverOnSprite;
+
+  sf::Texture m_characters;
+  std::unordered_map<Maze::Direction, sf::Sprite> m_playerSprite;
+
+  sf::SoundBuffer m_glassBreak;
+  sf::Sound m_leverSound;
+  sf::SoundBuffer m_hiccup;
+  sf::Sound m_bonusSound;
 };
 
 }

@@ -1,5 +1,7 @@
 #include "maze.hpp"
 
+#include "resources.hpp"
+
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 
@@ -19,6 +21,54 @@ Maze::Maze(std::size_t p_width, std::size_t p_height)
     row.back() = Tile::Border;
   }
   m_tiles.back() = {p_width, Tile::Border};
+
+  sf::Image tilesetsImage;
+  tilesetsImage.loadFromFile(getResource("image/rpg-maker-2k-tilesets.png"));
+  tilesetsImage.createMaskFromColor({255, 103, 139});
+  m_tileset.loadFromImage(tilesetsImage, {480 + 4, 256 + 6, 480, 256});
+  auto getTile = [&](int x, int y)
+  {
+    constexpr int TILE_SIZE = 16;
+    constexpr auto scaleFactor = Cell::PIXELS / static_cast<float>(TILE_SIZE);
+    sf::Sprite sprite(m_tileset);
+    sprite.setTextureRect({TILE_SIZE * x, TILE_SIZE * y, TILE_SIZE, TILE_SIZE});
+    sprite.setScale({scaleFactor, scaleFactor});
+    return sprite;
+  };
+  m_floorSprite = getTile(7, 4);
+  m_borderSprite = getTile(6, 8);
+  m_wallSprite = getTile(19, 9);
+  m_startSprite = getTile(0, 12);
+  m_openEndSprite = getTile(21, 7);
+  m_closedEndSprite = getTile(21, 6);
+  m_bonusSprite = getTile(18, 11);
+  m_leverOnSprite = getTile(29, 2);
+  m_leverOffSprite = getTile(22, 11);
+
+  sf::Image charactersImage;
+  charactersImage.loadFromFile(getResource("image/rpg-maker-2k-characters.png"));
+  charactersImage.createMaskFromColor({32, 156, 0});
+  m_characters.loadFromImage(charactersImage, {2, 2, 192, 128});
+  auto getCharacter  = [&](int x, int y)
+  {
+    constexpr int TILE_SIZE_X = 24;
+    constexpr int TILE_SIZE_Y = 32;
+    constexpr auto scaleFactor = Cell::PIXELS / static_cast<float>(TILE_SIZE_X);
+    sf::Sprite sprite(m_characters);
+    sprite.setTextureRect({TILE_SIZE_X * x, TILE_SIZE_Y * y, TILE_SIZE_X, TILE_SIZE_Y});
+    sprite.setOrigin(0, TILE_SIZE_Y / 2);
+    sprite.setScale({scaleFactor, scaleFactor});
+    return sprite;
+  };
+  m_playerSprite[Direction::North] = getCharacter(1, 0);
+  m_playerSprite[Direction::East] = getCharacter(1, 1);
+  m_playerSprite[Direction::South] = getCharacter(1, 2);
+  m_playerSprite[Direction::West] = getCharacter(1, 3);
+
+  m_glassBreak.loadFromFile(getResource("audio/glass-breaking.wav"));
+  m_leverSound.setBuffer(m_glassBreak);
+  m_hiccup.loadFromFile(getResource("audio/hiccuping.wav"));
+  m_bonusSound.setBuffer(m_hiccup);
 }
 
 std::size_t Maze::getWidth() const
@@ -79,15 +129,17 @@ void Maze::setPlayer(Cell p_cell)
 
   switch (getTile(m_player))
   {
-    case Tile::Lever:
+    case Tile::LeverOff:
     {
       openDoor();
-      setTile(m_player, Tile::Floor);
+      m_leverSound.play();
+      setTile(m_player, Tile::LeverOn);
       break;
     }
     case Tile::Bonus:
     {
       m_hasBonus = true;
+      m_bonusSound.play();
       setTile(m_player, Tile::Floor);
       break;
     }
@@ -106,6 +158,8 @@ void Maze::setPlayer(Cell p_cell)
 
 void Maze::movePlayer(Direction p_direction)
 {
+  m_playerDirection = p_direction;
+
   auto targetTile = getTile(getNextCell(m_player, p_direction));
   if (targetTile == Tile::Border || targetTile == Tile::Wall)
   {
@@ -158,11 +212,6 @@ void Maze::openDoor()
   }
 }
 
-bool Maze::doorIsOpen() const
-{
-  return m_doorOpen;
-}
-
 bool Maze::hasBonus() const
 {
   return m_hasBonus;
@@ -184,69 +233,75 @@ void Maze::draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const
   p_target.clear(fogColor);
 
   // Tiles
-  sf::RectangleShape tile({Cell::PIXELS, Cell::PIXELS});
   for (auto row = 0u; row < getHeight(); ++row)
   {
     for (auto col = 0u; col < getWidth(); ++col)
     {
+      std::vector<sf::Sprite> sprites;
       switch (getTile({row, col}))
       {
         case Tile::Floor:
         {
-          tile.setFillColor({100, 100, 100});
+          sprites = {m_floorSprite};
           break;
         }
         case Tile::Border:
         {
-          tile.setFillColor(sf::Color::Black);
+          sprites = {m_borderSprite};
           break;
         }
         case Tile::Wall:
         {
-          tile.setFillColor({160, 100, 40});
+          sprites = {m_floorSprite, m_wallSprite};
           break;
         }
         case Tile::Start:
         {
-          tile.setFillColor(sf::Color::White);
+          sprites = {m_startSprite};
           break;
         }
         case Tile::ClosedEnd:
         {
-          tile.setFillColor(sf::Color::Red);
+          sprites = {m_closedEndSprite};
           break;
         }
         case Tile::OpenEnd:
         {
-          tile.setFillColor(sf::Color::Green);
+          sprites = {m_openEndSprite};
           break;
         }
-        case Tile::Lever:
+        case Tile::LeverOff:
         {
-          tile.setFillColor(sf::Color::Blue);
+          sprites = {m_floorSprite, m_leverOffSprite};
+          break;
+        }
+        case Tile::LeverOn:
+        {
+          sprites = {m_floorSprite, m_leverOnSprite};
           break;
         }
         case Tile::Bonus:
         {
-          tile.setFillColor(sf::Color::Yellow);
+          sprites = {m_floorSprite, m_bonusSprite};
           break;
         }
       }
 
-      tile.setPosition(col * Cell::PIXELS, row * Cell::PIXELS);
-      p_target.draw(tile, p_states);
+      for (auto& sprite: sprites)
+      {
+        sprite.setPosition(col * Cell::PIXELS, row * Cell::PIXELS);
+        p_target.draw(sprite, p_states);
+      }
     }
   }
 
   // Player
-  auto const playerRadius = Cell::PIXELS / 2 * 0.7;
-  sf::CircleShape player(playerRadius);
-  player.setOrigin(playerRadius, playerRadius);
-  player.setFillColor(sf::Color::Cyan);
-  player.setPosition((m_player.column + 0.5) * Cell::PIXELS, (m_player.row + 0.5) * Cell::PIXELS);
+  auto player = m_playerSprite.at(m_playerDirection);
+  player.setPosition(m_player.column * Cell::PIXELS, m_player.row * Cell::PIXELS * 1.f);
   p_target.draw(player, p_states);
 
   // Fog of war
+  sf::RectangleShape tile({Cell::PIXELS, Cell::PIXELS});
   tile.setFillColor(fogColor);
   for (auto row = 0u; row < getHeight(); ++row)
   {
@@ -284,6 +339,16 @@ sf::Vector2f Maze::getVisibleCenter() const
   center += {0.5f, 0.5f};
   center *= static_cast<float>(Cell::PIXELS);
   return getTransform().transformPoint(center);
+}
+
+sf::Sprite Maze::getDoorIndicator() const
+{
+  return m_doorOpen ? m_openEndSprite : m_closedEndSprite;
+}
+
+sf::Sprite Maze::getBonusIndicator() const
+{
+  return m_hasBonus ? m_bonusSprite : sf::Sprite{};
 }
 
 }
