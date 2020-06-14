@@ -30,8 +30,12 @@ public:
   int currentLevel() const;
   void nextLevel(std::vector<Item> const& p_bonus, std::vector<Item> const& p_malus);
 
+  void setFlashlight(bool p_flashlight);
+  bool hasFlaslight() const;
+
 private:
   void initItems();
+  std::vector<Item> getItems(std::vector<Item>& p_itemPool, std::size_t p_count);
 
   std::vector<Item> m_bonus;
   std::vector<Item> m_malus;
@@ -45,6 +49,8 @@ private:
   std::size_t m_bonusCount{0};
 
   unsigned int m_level{1};
+
+  bool m_flashlight{false};
 };
 
 }

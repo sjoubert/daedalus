@@ -14,9 +14,9 @@ Generator::Generator(std::size_t p_width, std::size_t p_height)
 {
 }
 
-Maze Generator::primMaze()
+Maze Generator::primMaze(RunState p_state)
 {
-  Maze maze{m_width, m_height};
+  Maze maze{m_width, m_height, p_state};
 
   // Walls
   std::vector cells = {Cell{1, 1}};

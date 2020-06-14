@@ -10,9 +10,10 @@
 namespace daedalus
 {
 
-Maze::Maze(std::size_t p_width, std::size_t p_height)
+Maze::Maze(std::size_t p_width, std::size_t p_height, RunState p_state)
   : m_tiles{p_height, {p_width, Tile::Wall}}
   , m_fog{p_height, std::vector<bool>(p_width, true)}
+  , m_state(p_state)
 {
   m_tiles.front() = {p_width, Tile::Border};
   for (auto& row: m_tiles)
@@ -154,6 +155,21 @@ void Maze::setPlayer(Cell p_cell)
       m_fog[m_player.row + deltaRow][m_player.column + deltaCol] = false;
     }
   }
+
+  if (m_state.hasFlaslight())
+  {
+    auto location = m_player;
+    bool foundObstacle = false;
+    while (not foundObstacle)
+    {
+      m_fog[location.row][location.column] = false;
+
+      auto tile = getTile(location);
+      foundObstacle = tile == Tile::Wall || tile == Tile::Border;
+
+      location = getNextCell(location, m_playerDirection);
+    }
+  }
 }
 
 void Maze::movePlayer(Direction p_direction)
@@ -161,34 +177,11 @@ void Maze::movePlayer(Direction p_direction)
   m_playerDirection = p_direction;
 
   auto targetTile = getTile(getNextCell(m_player, p_direction));
-  if (targetTile == Tile::Border || targetTile == Tile::Wall)
+  if (targetTile != Tile::Border && targetTile != Tile::Wall)
   {
-    return;
+    m_player = getNextCell(m_player, m_playerDirection);
   }
 
-  switch (p_direction)
-  {
-    case Direction::North:
-    {
-      --m_player.row;
-      break;
-    }
-    case Direction::South:
-    {
-      ++m_player.row;
-      break;
-    }
-    case Direction::East:
-    {
-      ++m_player.column;
-      break;
-    }
-    case Direction::West:
-    {
-      --m_player.column;
-      break;
-    }
-  }
   setPlayer(m_player);
 }
 

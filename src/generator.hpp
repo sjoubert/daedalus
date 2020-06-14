@@ -14,7 +14,7 @@ class Generator
 public:
   Generator(std::size_t p_width, std::size_t p_height);
 
-  Maze primMaze();
+  Maze primMaze(RunState p_state);
 
 private:
   Cell randomCell();

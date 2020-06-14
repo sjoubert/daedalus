@@ -2,6 +2,7 @@
 #define DAEDALUS_MAZE_HPP
 
 #include "cell.hpp"
+#include "run_state.hpp"
 
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>
@@ -43,7 +44,7 @@ public:
     West,
   };
 
-  Maze(std::size_t p_width, std::size_t p_height);
+  Maze(std::size_t p_width, std::size_t p_height, RunState p_state);
 
   std::size_t getWidth() const;
   std::size_t getHeight() const;
@@ -78,6 +79,8 @@ private:
   bool m_doorOpen = false;
   bool m_hasBonus = false;
 
+  RunState m_state;
+
   sf::Texture m_tileset;
   sf::Sprite m_floorSprite;
   sf::Sprite m_borderSprite;
@@ -90,7 +93,7 @@ private:
   sf::Sprite m_leverOnSprite;
 
   sf::Texture m_characters;
-  std::unordered_map<Maze::Direction, sf::Sprite> m_playerSprite;
+  std::unordered_map<Direction, sf::Sprite> m_playerSprite;
 
   sf::SoundBuffer m_glassBreak;
   sf::Sound m_leverSound;

@@ -12,7 +12,7 @@ class RunState;
 class Item
 {
 public:
-  Item(std::string p_name, std::string p_text);
+  Item(int p_uses, std::string p_name, std::string p_text);
   Item(Item const&) = default;
 
   std::string const& getName() const;
@@ -23,11 +23,18 @@ public:
   bool& getSelected();
   bool isSelected() const;
 
+  /**
+   * Mark item as used
+   * @return Uses left
+   */
+  int use();
+
 private:
   std::string m_name;
   std::string m_text;
   std::function<void(RunState&)> m_effect;
   bool m_selected{false};
+  int m_uses;
 };
 
 }

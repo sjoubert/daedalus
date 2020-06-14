@@ -17,7 +17,7 @@ namespace daedalus
 std::unique_ptr<Screen> StartScreen::run()
 {
   auto size = getWindow().getSize();
-  auto maze = Generator{size.x / Cell::PIXELS, size.y / Cell::PIXELS}.primMaze();
+  auto maze = Generator{size.x / Cell::PIXELS, size.y / Cell::PIXELS}.primMaze({});
   maze.setPosition((size.x - maze.getWidth() * Cell::PIXELS) / 2., (size.y - maze.getHeight() * Cell::PIXELS) / 2.);
   maze.clearFog();
 

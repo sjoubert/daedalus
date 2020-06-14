@@ -35,21 +35,41 @@ void RunState::increaseTimeFactor()
   m_timeFactor += 0.1;
 }
 
-std::vector<Item> RunState::getBonus()
-{
-  std::shuffle(m_bonus.begin(), m_bonus.end(), m_itemRng);
-  return {m_bonus.begin(), std::next(m_bonus.begin(), std::min(m_bonusCount, m_bonus.size()))};
-}
-
 void RunState::addBonus()
 {
   ++m_bonusCount;
 }
 
+std::vector<Item> RunState::getBonus()
+{
+  return getItems(m_bonus, m_bonusCount);
+}
+
 std::vector<Item> RunState::getMalus()
 {
-  std::shuffle(m_malus.begin(), m_malus.end(), m_itemRng);
-  return {m_malus.front()};
+  return getItems(m_malus, 1);
+}
+
+std::vector<Item> RunState::getItems(std::vector<Item>& p_itemPool, std::size_t p_count)
+{
+  std::shuffle(p_itemPool.begin(), p_itemPool.end(), m_itemRng);
+  auto count = std::min(p_count, p_itemPool.size());
+
+  // Remove used items
+  auto itBound = std::prev(p_itemPool.end(), count);
+  std::vector<Item> items(itBound, p_itemPool.end());
+  p_itemPool.erase(itBound, p_itemPool.end());
+
+  // Replace items with left uses
+  for (auto& item: items)
+  {
+    if (item.use() != 0)
+    {
+      p_itemPool.push_back(item);
+    }
+  }
+
+  return items;
 }
 
 int RunState::currentLevel() const
@@ -76,6 +96,16 @@ void RunState::nextLevel(std::vector<Item> const& p_bonus, std::vector<Item> con
       item.getEffect()(*this);
     }
   }
+}
+
+void RunState::setFlashlight(bool p_flashlight)
+{
+  m_flashlight = p_flashlight;
+}
+
+bool RunState::hasFlaslight() const
+{
+  return m_flashlight;
 }
 
 }
