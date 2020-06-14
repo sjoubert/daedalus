@@ -2,8 +2,7 @@
 #include "resources.hpp"
 
 #include <SFML/Graphics/RenderWindow.hpp>
-#include <SFML/Audio/SoundBuffer.hpp>
-#include <SFML/Audio/Sound.hpp>
+#include <SFML/Audio/Music.hpp>
 
 #include "imgui.h"
 #include "imgui-SFML.h"
@@ -19,11 +18,10 @@ int main()
   io.IniFilename = nullptr;
   io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 
-  sf::SoundBuffer bgSoundBuffer;
-  bgSoundBuffer.loadFromFile(daedalus::getResource("audio/chill-tune-for-a-game.wav"));
-  sf::Sound bgSound(bgSoundBuffer);
-  bgSound.setLoop(true);
-  bgSound.play();
+  sf::Music bgMusic;
+  bgMusic.openFromFile(daedalus::getResource("audio/chill-tune-for-a-game.wav"));
+  bgMusic.setLoop(true);
+  bgMusic.play();
 
   std::unique_ptr<daedalus::Screen> screen = std::make_unique<daedalus::StartScreen>(window);
   while (screen)
