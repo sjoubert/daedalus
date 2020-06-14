@@ -67,7 +67,7 @@ Maze::Maze(std::size_t p_width, std::size_t p_height)
 
   m_glassBreak.loadFromFile(getResource("audio/glass-breaking.wav"));
   m_leverSound.setBuffer(m_glassBreak);
-  m_hiccup.loadFromFile(getResource("audio/hiccuping.wav"));
+  m_hiccup.loadFromFile(getResource("audio/level-up-3note2.wav"));
   m_bonusSound.setBuffer(m_hiccup);
 }
 
