@@ -14,8 +14,10 @@
 namespace daedalus
 {
 
-NextLevelScreen::NextLevelScreen(sf::RenderWindow& p_window, RunState p_state)
+NextLevelScreen::NextLevelScreen(sf::RenderWindow& p_window, sf::Texture p_background, RunState p_state)
   : Screen(p_window)
+  , m_background(p_background)
+  , m_backgroundSprite(m_background)
   , m_state(std::move(p_state))
 {
 }
@@ -107,6 +109,7 @@ std::unique_ptr<Screen> NextLevelScreen::run()
     ImGui::End();
 
     getWindow().clear(sf::Color::Black);
+    getWindow().draw(m_backgroundSprite);
     ImGui::SFML::Render(getWindow());
     getWindow().display();
   }

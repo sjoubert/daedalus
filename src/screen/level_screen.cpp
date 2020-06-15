@@ -6,6 +6,7 @@
 #include "resources.hpp"
 
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/RenderTexture.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
@@ -25,12 +26,6 @@ LevelScreen::LevelScreen(sf::RenderWindow& p_window, RunState p_state)
 
 std::unique_ptr<Screen> LevelScreen::run()
 {
-  auto centerView = [](sf::RenderTarget& p_target, sf::Vector2f p_center)
-  {
-    auto view = p_target.getView();
-    view.setCenter(p_center);
-    p_target.setView(view);
-  };
   centerView(getWindow(), m_maze.getVisibleCenter());
 
   sf::SoundBuffer tickTockBuffer;
@@ -82,7 +77,7 @@ std::unique_ptr<Screen> LevelScreen::run()
               {
                 m_state.addBonus();
               }
-              return std::make_unique<NextLevelScreen>(getWindow(), m_state);
+              return std::make_unique<NextLevelScreen>(getWindow(), createBackground(), m_state);
             }
             break;
           }
@@ -96,7 +91,7 @@ std::unique_ptr<Screen> LevelScreen::run()
     auto const timeRatio = clock.getElapsedTime() / allowedTime;
     if (timeRatio > 1)
     {
-      return std::make_unique<LostScreen>(getWindow(), m_state.currentLevel());
+      return std::make_unique<LostScreen>(getWindow(), createBackground(), m_state.currentLevel());
     }
     auto const warningClock = (allowedTime - clock.getElapsedTime()) < sf::seconds(10) && timeRatio > 0.85;
     if (tickTockSound.getStatus() != sf::SoundSource::Playing && warningClock)
@@ -160,6 +155,32 @@ void LevelScreen::drawHUD(float p_timeRatio)
   getWindow().draw(bonus);
 
   getWindow().setView(saveView);
+}
+
+void LevelScreen::centerView(sf::RenderTarget& p_target, sf::Vector2f p_center)
+{
+  auto view = p_target.getView();
+  view.setCenter(p_center);
+  p_target.setView(view);
+}
+
+sf::Texture LevelScreen::createBackground()
+{
+  auto windowSize = getWindow().getSize();
+
+  sf::RenderTexture render;
+  render.create(windowSize.x, windowSize.y);
+
+  centerView(render, m_maze.getVisibleCenter());
+  render.draw(m_maze);
+
+  sf::RectangleShape blur(sf::Vector2f(windowSize.x, windowSize.y));
+  blur.setFillColor({255, 255, 255, 128});
+  render.setView(render.getDefaultView());
+  render.draw(blur);
+
+  render.display();
+  return render.getTexture();
 }
 
 }

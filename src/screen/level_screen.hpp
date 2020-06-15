@@ -17,7 +17,9 @@ public:
   std::unique_ptr<Screen> run() override;
 
 private:
+  static void centerView(sf::RenderTarget& p_target, sf::Vector2f p_center);
   void drawHUD(float p_timeRatio);
+  sf::Texture createBackground();
 
   RunState m_state;
   Maze m_maze;
