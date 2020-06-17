@@ -10,16 +10,16 @@ namespace daedalus
 
 void RunState::initItems()
 {
-  DAEDALUS_BONUS(-1, "Hourglass", "Allowed time increase")
+  DAEDALUS_BONUS(-1, "Hourglass", "Take your sweet time")
   {
     state.m_timeFactor += 0.1;
   };
-  DAEDALUS_MALUS(-1, "Metronome", "Allowed time decrease")
+  DAEDALUS_MALUS(-1, "Metronome", "Harder? Better? Faster!")
   {
     state.m_timeFactor -= 0.1;
   };
 
-  DAEDALUS_BONUS(-1, "Zip", "Maze size decrease")
+  DAEDALUS_BONUS(-1, "Zip", "Hey, I shrunk the maze")
   {
     state.m_sizeDist =
       std::uniform_int_distribution<std::size_t>{state.m_sizeDist.min() - 1, state.m_sizeDist.max() - 1};
