@@ -19,7 +19,7 @@ namespace daedalus
 
 LevelScreen::LevelScreen(sf::RenderWindow& p_window, RunState p_state)
   : Screen(p_window)
-  , m_state(std::move(p_state))
+  , m_state(p_state)
   , m_maze(Generator{m_state.newWidth(), m_state.newHeight()}.primMaze(p_state))
 {
 }
