@@ -98,14 +98,14 @@ void RunState::nextLevel(std::vector<Item> const& p_bonus, std::vector<Item> con
   }
 }
 
-void RunState::setFlashlight(bool p_flashlight)
+void RunState::addItem(Item::Id p_id)
 {
-  m_flashlight = p_flashlight;
+  m_items.push_back(p_id);
 }
 
-bool RunState::hasFlaslight() const
+bool RunState::hasItem(Item::Id p_id) const
 {
-  return m_flashlight;
+  return std::find(m_items.begin(), m_items.end(), p_id) != m_items.end();
 }
 
 }

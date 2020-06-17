@@ -32,7 +32,20 @@ void RunState::initItems()
 
   DAEDALUS_BONUS(1, "Flashlight", "See far away")
   {
-    state.setFlashlight(true);
+    state.addItem(Item::Id::Flashlight);
+  };
+
+  DAEDALUS_BONUS(1, "Treasure map", "Oh, the shiny things")
+  {
+    state.addItem(Item::Id::TreasureMap);
+  };
+  DAEDALUS_BONUS(1, "Compass", "You are my North, mmm..., my exit")
+  {
+    state.addItem(Item::Id::Compass);
+  };
+  DAEDALUS_BONUS(1, "Dowser's wand", "I feel water, mmm..., I think")
+  {
+    state.addItem(Item::Id::DowserWand);
   };
 }
 

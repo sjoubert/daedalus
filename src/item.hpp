@@ -12,6 +12,14 @@ class RunState;
 class Item
 {
 public:
+  enum class Id
+  {
+    Compass,
+    DowserWand,
+    Flashlight,
+    TreasureMap,
+  };
+
   Item(int p_uses, std::string p_name, std::string p_text);
   Item(Item const&) = default;
 

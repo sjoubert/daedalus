@@ -156,7 +156,7 @@ void Maze::setPlayer(Cell p_cell)
     }
   }
 
-  if (m_state.hasFlaslight())
+  if (m_state.hasItem(Item::Id::Flashlight))
   {
     auto location = m_player;
     bool foundObstacle = false;
@@ -216,6 +216,11 @@ void Maze::clearFog()
   {
     std::fill(row.begin(), row.end(), false);
   }
+}
+
+void Maze::clearFog(Cell p_cell)
+{
+  m_fog[p_cell.row][p_cell.column] = false;
 }
 
 void Maze::draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const

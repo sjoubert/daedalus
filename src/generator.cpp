@@ -57,9 +57,27 @@ Maze Generator::primMaze(RunState p_state)
   auto startCell = randomEmptyCell(maze);
   maze.setTile(startCell, Maze::Tile::Start);
   maze.setPlayer(startCell);
-  maze.setTile(randomEmptyCell(maze), Maze::Tile::ClosedEnd);
-  maze.setTile(randomEmptyCell(maze), Maze::Tile::LeverOff);
-  maze.setTile(randomEmptyCell(maze), Maze::Tile::Bonus);
+
+  auto endCell = randomEmptyCell(maze);
+  maze.setTile(endCell, Maze::Tile::ClosedEnd);
+  if (p_state.hasItem(Item::Id::Compass))
+  {
+    maze.clearFog(endCell);
+  }
+
+  auto leverCell = randomEmptyCell(maze);
+  maze.setTile(leverCell, Maze::Tile::LeverOff);
+  if (p_state.hasItem(Item::Id::DowserWand))
+  {
+    maze.clearFog(leverCell);
+  }
+
+  auto bonusCell = randomEmptyCell(maze);
+  maze.setTile(bonusCell, Maze::Tile::Bonus);
+  if (p_state.hasItem(Item::Id::TreasureMap))
+  {
+    maze.clearFog(bonusCell);
+  }
 
   return maze;
 }

@@ -61,6 +61,7 @@ public:
   bool hasBonus() const;
 
   void clearFog();
+  void clearFog(Cell p_cell);
 
   void draw(sf::RenderTarget& p_target, sf::RenderStates p_states) const override;
   sf::Vector2f getVisibleCenter() const;

@@ -30,8 +30,8 @@ public:
   int currentLevel() const;
   void nextLevel(std::vector<Item> const& p_bonus, std::vector<Item> const& p_malus);
 
-  void setFlashlight(bool p_flashlight);
-  bool hasFlaslight() const;
+  void addItem(Item::Id p_id);
+  bool hasItem(Item::Id p_id) const;
 
 private:
   void initItems();
@@ -50,7 +50,7 @@ private:
 
   unsigned int m_level{1};
 
-  bool m_flashlight{false};
+  std::vector<Item::Id> m_items;
 };
 
 }
