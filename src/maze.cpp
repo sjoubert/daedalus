@@ -159,10 +159,13 @@ void Maze::setPlayer(Cell p_cell)
   if (m_state.hasItem(Item::Id::Flashlight))
   {
     auto location = m_player;
-    bool foundObstacle = false;
-    while (not foundObstacle)
+    auto const deltaRow = (m_playerDirection == Direction::East || m_playerDirection == Direction::West) ? 1 : 0;
+    auto const deltaCol = (m_playerDirection == Direction::North || m_playerDirection == Direction::South) ? 1 : 0;
+    for (bool foundObstacle = false; not foundObstacle;)
     {
       m_fog[location.row][location.column] = false;
+      m_fog[location.row - deltaRow][location.column - deltaCol] = false;
+      m_fog[location.row + deltaRow][location.column + deltaCol] = false;
 
       auto tile = getTile(location);
       foundObstacle = tile == Tile::Wall || tile == Tile::Border;
