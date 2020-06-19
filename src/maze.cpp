@@ -164,8 +164,20 @@ void Maze::setPlayer(Cell p_cell)
     for (bool foundObstacle = false; not foundObstacle;)
     {
       m_fog[location.row][location.column] = false;
-      m_fog[location.row - deltaRow][location.column - deltaCol] = false;
-      m_fog[location.row + deltaRow][location.column + deltaCol] = false;
+
+      Cell oneSide{location.row - deltaRow, location.column - deltaCol};
+      auto oneSideTile = getTile(oneSide);
+      if (oneSideTile == Tile::Wall || oneSideTile == Tile::Border)
+      {
+        m_fog[oneSide.row][oneSide.column] = false;
+      }
+
+      Cell otherSide{location.row + deltaRow, location.column + deltaCol};
+      auto otherSideTile = getTile(otherSide);
+      if (otherSideTile == Tile::Wall || otherSideTile == Tile::Border)
+      {
+        m_fog[otherSide.row][otherSide.column] = false;
+      }
 
       auto tile = getTile(location);
       foundObstacle = tile == Tile::Wall || tile == Tile::Border;
