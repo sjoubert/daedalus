@@ -24,7 +24,7 @@ void RunState::initItems()
     state.m_sizeDist =
       std::uniform_int_distribution<std::size_t>{state.m_sizeDist.min() - 1, state.m_sizeDist.max() - 1};
   };
-  DAEDALUS_MALUS(-1, "Unzip", "Maze size increase")
+  DAEDALUS_MALUS(-1, "Unzip", "It's bigger on the inside")
   {
     state.m_sizeDist =
       std::uniform_int_distribution<std::size_t>{state.m_sizeDist.min() + 1, state.m_sizeDist.max() + 1};
