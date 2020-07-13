@@ -24,6 +24,9 @@ void RunState::initItems()
   // Movement
   m_malus.emplace_back(Item::Id::Mirror, 1, "Mirror", "The other left");
   m_malus.emplace_back(Item::Id::UpsideDown, 1, "Upside down", "Ups and downs");
+
+  // Items
+  m_bonus.emplace_back(Item::Id::Panacea, 1, "Panacea", "So many things");
 }
 
 }

@@ -23,6 +23,7 @@ public:
 
   std::vector<Item> getBonus();
   void addBonus();
+  std::size_t getBonusCount() const;
   std::vector<Item> getMalus();
 
   int currentLevel() const;

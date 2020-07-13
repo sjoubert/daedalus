@@ -20,6 +20,7 @@ public:
     Hourglass,
     Metronome,
     Mirror,
+    Panacea,
     TreasureMap,
     Unzip,
     UpsideDown,

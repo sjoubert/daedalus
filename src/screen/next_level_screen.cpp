@@ -11,6 +11,8 @@
 #include "imgui.h"
 #include "imgui-SFML.h"
 
+#include <algorithm>
+
 namespace daedalus
 {
 
@@ -28,10 +30,7 @@ std::unique_ptr<Screen> NextLevelScreen::run()
 
   auto bonus = m_state.getBonus();
   auto malus = m_state.getMalus();
-  for (auto& item: malus)
-  {
-    item.getSelected() = true;
-  }
+  malus.front().getSelected() = true;
 
   sf::SoundBuffer tickTockBuffer;
   tickTockBuffer.loadFromFile(getResource("audio/ta-da.wav"));
@@ -64,7 +63,7 @@ std::unique_ptr<Screen> NextLevelScreen::run()
     }
     else
     {
-      ImGui::Text("Bonus:");
+      ImGui::Text("Bonus (%lu available):", m_state.getBonusCount());
       for (auto& item: bonus)
       {
         ImGui::Bullet();
@@ -78,11 +77,11 @@ std::unique_ptr<Screen> NextLevelScreen::run()
 
     ImGui::NextColumn();
 
-    ImGui::Text("Malus:");
+    ImGui::Text("Malus (1 required):");
     for (auto& item: malus)
     {
       ImGui::Bullet();
-      ImGui::Selectable(item.getName().c_str(), true);
+      ImGui::Selectable(item.getName().c_str(), &item.getSelected());
       if (ImGui::IsItemHovered())
       {
         ImGui::SetTooltip("%s", item.getText().c_str());
@@ -97,10 +96,21 @@ std::unique_ptr<Screen> NextLevelScreen::run()
 
     ImGui::Dummy({nextLevelButtonSpacing, -1});
     ImGui::SameLine();
-    if (Gui::SoundButton("Next Level"))
+    auto selectedMalus = std::ranges::count_if(malus, [](Item const& p_item)
     {
-      m_state.nextLevel(bonus, malus);
-      return std::make_unique<LevelScreen>(getWindow(), m_state);
+      return p_item.isSelected();
+    });
+    if (selectedMalus != 1)
+    {
+      ImGui::Text("Select your bonus and malus");
+    }
+    else
+    {
+      if (Gui::SoundButton("Next Level"))
+      {
+        m_state.nextLevel(bonus, malus);
+        return std::make_unique<LevelScreen>(getWindow(), m_state);
+      }
     }
     nextLevelButtonSpacing = (ImGui::GetWindowContentRegionWidth() - ImGui::GetItemRectSize().x) / 2.f;
 

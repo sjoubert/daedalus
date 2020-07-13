@@ -34,14 +34,29 @@ void RunState::addBonus()
   ++m_bonusCount;
 }
 
+std::size_t RunState::getBonusCount() const
+{
+  return m_bonusCount;
+}
+
 std::vector<Item> RunState::getBonus()
 {
-  return getItems(m_bonus, m_bonusCount);
+  auto count = m_bonusCount;
+  if (hasItem(Item::Id::Panacea))
+  {
+    ++count;
+  }
+  return getItems(m_bonus, count);
 }
 
 std::vector<Item> RunState::getMalus()
 {
-  return getItems(m_malus, 1);
+  auto count = 1;
+  if (hasItem(Item::Id::Panacea))
+  {
+    ++count;
+  }
+  return getItems(m_malus, count);
 }
 
 std::vector<Item> RunState::getItems(std::vector<Item>& p_itemPool, std::size_t p_count)
