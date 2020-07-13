@@ -1,6 +1,6 @@
 #include "resources.hpp"
 
-namespace  daedalus
+namespace daedalus
 {
 
 std::string getResource(std::string const& p_resource)
