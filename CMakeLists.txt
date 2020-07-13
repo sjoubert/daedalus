@@ -5,8 +5,7 @@ project(daedalus
   LANGUAGES CXX
 )
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-include(common_options)
+include(cmake/common_options.cmake)
 
 include(GNUInstallDirs)
 # Setup build directory
