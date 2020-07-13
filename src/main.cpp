@@ -4,8 +4,8 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Audio/Music.hpp>
 
-#include "imgui.h"
-#include "imgui-SFML.h"
+#include <imgui.h>
+#include <imgui-SFML.h>
 
 #include <memory>
 
