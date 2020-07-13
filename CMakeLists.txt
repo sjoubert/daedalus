@@ -47,7 +47,9 @@ add_executable(daedalus
 target_include_directories(daedalus PRIVATE src/)
 
 find_package(SFML COMPONENTS graphics audio REQUIRED)
+mark_as_advanced(SFML_DIR SFML_DOC_DIR)
 find_package(ImGui-SFML REQUIRED)
+mark_as_advanced(ImGui-SFML_DIR)
 target_link_libraries(daedalus PRIVATE
   sfml-graphics
   sfml-audio
