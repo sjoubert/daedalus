@@ -7,7 +7,7 @@ static std::filesystem::path sg_resourceDir;
 
 void initResourceDir(std::filesystem::path p_executablePath)
 {
-  sg_resourceDir = p_executablePath.parent_path().parent_path() / "share" / "daedalus";
+  sg_resourceDir = std::filesystem::canonical(p_executablePath).parent_path().parent_path() / "share" / "daedalus";
 }
 
 std::string getResource(std::string const& p_resource)
