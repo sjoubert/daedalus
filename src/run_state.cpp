@@ -46,7 +46,7 @@ std::vector<Item> RunState::getMalus()
 
 std::vector<Item> RunState::getItems(std::vector<Item>& p_itemPool, std::size_t p_count)
 {
-  std::shuffle(p_itemPool.begin(), p_itemPool.end(), m_itemRng);
+  std::ranges::shuffle(p_itemPool, m_itemRng);
   auto count = std::min(p_count, p_itemPool.size());
 
   // Remove used items
@@ -99,12 +99,12 @@ void RunState::addItem(Item::Id p_id)
 
 bool RunState::hasItem(Item::Id p_id) const
 {
-  return std::find(m_items.begin(), m_items.end(), p_id) != m_items.end();
+  return std::ranges::find(m_items, p_id) != m_items.end();
 }
 
 std::size_t RunState::countItem(Item::Id p_id) const
 {
-  return std::count(m_items.begin(), m_items.end(), p_id);
+  return std::ranges::count(m_items, p_id);
 }
 
 }

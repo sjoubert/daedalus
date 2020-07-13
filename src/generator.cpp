@@ -43,7 +43,7 @@ Maze Generator::primMaze(RunState p_state)
     auto wall = *wallIt;
     walls.erase(wallIt);
 
-    if (std::find(cells.begin(), cells.end(), wall.second) == cells.end())
+    if (std::ranges::find(cells, wall.second) == cells.end())
     {
       maze.setTile(wall.first, Maze::Tile::Floor);
       maze.setTile(wall.second, Maze::Tile::Floor);
