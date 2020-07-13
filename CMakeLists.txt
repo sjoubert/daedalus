@@ -8,6 +8,16 @@ project(daedalus
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(common_options)
 
+include(GNUInstallDirs)
+# Setup build directory
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_INSTALL_BINDIR})
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_DATADIR})
+file(CREATE_LINK
+  ${CMAKE_CURRENT_SOURCE_DIR}/res
+  ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_DATADIR}/daedalus
+  SYMBOLIC
+)
+
 add_executable(daedalus
   src/cell.hpp
   src/generator.hpp
@@ -35,9 +45,6 @@ add_executable(daedalus
   src/screen/start_screen.cpp
 )
 target_include_directories(daedalus PRIVATE src/)
-set_source_files_properties(src/resources.cpp PROPERTIES
-  COMPILE_DEFINITIONS DAEDALUS_RESOURCE_PATH="${CMAKE_CURRENT_SOURCE_DIR}/res/"
-)
 
 find_package(SFML COMPONENTS graphics audio REQUIRED)
 find_package(ImGui-SFML REQUIRED)
@@ -46,3 +53,8 @@ target_link_libraries(daedalus PRIVATE
   sfml-audio
   ImGui-SFML::ImGui-SFML
 )
+
+install(TARGETS daedalus)
+install(DIRECTORY res/ DESTINATION ${CMAKE_INSTALL_DATADIR}/daedalus)
+
+include(CPack)

@@ -9,8 +9,10 @@
 
 #include <memory>
 
-int main()
+int main(int, char** p_argv)
 {
+  daedalus::initResourceDir(p_argv[0]);
+
   sf::RenderWindow window({1366, 768}, "Daedalus");
   window.setVerticalSyncEnabled(true);
   ImGui::SFML::Init(window);
