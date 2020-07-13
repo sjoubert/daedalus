@@ -20,6 +20,10 @@ void RunState::initItems()
   m_bonus.emplace_back(Item::Id::TreasureMap, 1, "Treasure map", "Oh, the shiny things");
   m_bonus.emplace_back(Item::Id::Compass, 1, "Compass", "You are my North, mmm..., my exit");
   m_bonus.emplace_back(Item::Id::DowserWand, 1, "Dowser's wand", "I feel water, mmm..., I think");
+
+  // Movement
+  m_malus.emplace_back(Item::Id::Mirror, 1, "Mirror", "The other left");
+  m_malus.emplace_back(Item::Id::UpsideDown, 1, "Upside down", "Ups and downs");
 }
 
 }

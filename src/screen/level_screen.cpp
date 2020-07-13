@@ -51,22 +51,22 @@ std::unique_ptr<Screen> LevelScreen::run()
         {
           case sf::Keyboard::Up:
           {
-            m_maze.movePlayer(Maze::Direction::North);
+            m_maze.movePlayer(m_state.hasItem(Item::Id::UpsideDown) ? Maze::Direction::South : Maze::Direction::North);
             break;
           }
           case sf::Keyboard::Down:
           {
-            m_maze.movePlayer(Maze::Direction::South);
+            m_maze.movePlayer(m_state.hasItem(Item::Id::UpsideDown) ? Maze::Direction::North : Maze::Direction::South);
             break;
           }
           case sf::Keyboard::Right:
           {
-            m_maze.movePlayer(Maze::Direction::East);
+            m_maze.movePlayer(m_state.hasItem(Item::Id::Mirror) ? Maze::Direction::West : Maze::Direction::East);
             break;
           }
           case sf::Keyboard::Left:
           {
-            m_maze.movePlayer(Maze::Direction::West);
+            m_maze.movePlayer(m_state.hasItem(Item::Id::Mirror) ? Maze::Direction::East : Maze::Direction::West);
             break;
           }
           case sf::Keyboard::Space:

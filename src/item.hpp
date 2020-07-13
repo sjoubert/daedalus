@@ -19,8 +19,10 @@ public:
     Flashlight,
     Hourglass,
     Metronome,
+    Mirror,
     TreasureMap,
     Unzip,
+    UpsideDown,
     Zip,
   };
 
