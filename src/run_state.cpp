@@ -12,27 +12,21 @@ RunState::RunState()
 
 std::size_t RunState::newWidth()
 {
-  return m_sizeDist(m_rng);
+  auto const sizeDelta = countItem(Item::Id::Unzip) - countItem(Item::Id::Zip);
+  std::uniform_int_distribution<std::size_t> sizeDist{10 + sizeDelta, 16 + sizeDelta};
+  return sizeDist(m_sizeRng);
 }
 
 std::size_t RunState::newHeight()
 {
-  return m_sizeDist(m_rng);
-}
-
-void RunState::increaseSize()
-{
-  m_sizeDist = std::uniform_int_distribution<std::size_t>{m_sizeDist.min() + 1, m_sizeDist.max() + 1};
+  auto const sizeDelta = countItem(Item::Id::Unzip) - countItem(Item::Id::Zip);
+  std::uniform_int_distribution<std::size_t> sizeDist{5 + sizeDelta, 9 + sizeDelta};
+  return sizeDist(m_sizeRng);
 }
 
 float RunState::getTimeFactor() const
 {
-  return m_timeFactor;
-}
-
-void RunState::increaseTimeFactor()
-{
-  m_timeFactor += 0.1;
+  return 0.5 + 0.1 * (countItem(Item::Id::Hourglass) - countItem(Item::Id::Metronome));
 }
 
 void RunState::addBonus()
@@ -85,7 +79,7 @@ void RunState::nextLevel(std::vector<Item> const& p_bonus, std::vector<Item> con
   {
     if (item.isSelected())
     {
-      item.getEffect()(*this);
+      addItem(item.getId());
       --m_bonusCount;
     }
   }
@@ -93,7 +87,7 @@ void RunState::nextLevel(std::vector<Item> const& p_bonus, std::vector<Item> con
   {
     if (item.isSelected())
     {
-      item.getEffect()(*this);
+      addItem(item.getId());
     }
   }
 }
@@ -106,6 +100,11 @@ void RunState::addItem(Item::Id p_id)
 bool RunState::hasItem(Item::Id p_id) const
 {
   return std::find(m_items.begin(), m_items.end(), p_id) != m_items.end();
+}
+
+std::size_t RunState::countItem(Item::Id p_id) const
+{
+  return std::count(m_items.begin(), m_items.end(), p_id);
 }
 
 }

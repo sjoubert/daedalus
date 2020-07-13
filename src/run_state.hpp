@@ -18,10 +18,8 @@ public:
 
   std::size_t newWidth();
   std::size_t newHeight();
-  void increaseSize();
 
   float getTimeFactor() const;
-  void increaseTimeFactor();
 
   std::vector<Item> getBonus();
   void addBonus();
@@ -32,6 +30,7 @@ public:
 
   void addItem(Item::Id p_id);
   bool hasItem(Item::Id p_id) const;
+  std::size_t countItem(Item::Id p_id) const;
 
 private:
   void initItems();
@@ -40,10 +39,7 @@ private:
   std::vector<Item> m_bonus;
   std::vector<Item> m_malus;
 
-  std::mt19937 m_rng{std::random_device{}()};
-  std::uniform_int_distribution<std::size_t> m_sizeDist{10, 15};
-
-  float m_timeFactor{0.5};
+  std::mt19937 m_sizeRng{std::random_device{}()};
 
   std::mt19937 m_itemRng{std::random_device{}()};
   std::size_t m_bonusCount{0};

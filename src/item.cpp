@@ -3,11 +3,17 @@
 namespace daedalus
 {
 
-Item::Item(int p_uses, std::string p_name, std::string p_text)
-  : m_name(p_name)
+Item::Item(Id p_id, int p_uses, std::string p_name, std::string p_text)
+  : m_id(p_id)
+  , m_name(p_name)
   , m_text(p_text)
   , m_uses(p_uses)
 {
+}
+
+Item::Id Item::getId() const
+{
+  return m_id;
 }
 
 std::string const& Item::getName() const
@@ -18,16 +24,6 @@ std::string const& Item::getName() const
 std::string const& Item::getText() const
 {
   return m_text;
-}
-
-std::function<void(RunState&)>& Item::getEffect()
-{
-  return m_effect;
-}
-
-std::function<void(RunState&)> const& Item::getEffect() const
-{
-  return m_effect;
 }
 
 bool& Item::getSelected()

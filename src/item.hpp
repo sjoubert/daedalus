@@ -17,16 +17,19 @@ public:
     Compass,
     DowserWand,
     Flashlight,
+    Hourglass,
+    Metronome,
     TreasureMap,
+    Unzip,
+    Zip,
   };
 
-  Item(int p_uses, std::string p_name, std::string p_text);
+  Item(Id p_id, int p_uses, std::string p_name, std::string p_text);
   Item(Item const&) = default;
 
+  Id getId() const;
   std::string const& getName() const;
   std::string const& getText() const;
-  std::function<void(RunState&)>& getEffect();
-  std::function<void(RunState&)> const& getEffect() const;
 
   bool& getSelected();
   bool isSelected() const;
@@ -38,9 +41,9 @@ public:
   int use();
 
 private:
+  Id m_id;
   std::string m_name;
   std::string m_text;
-  std::function<void(RunState&)> m_effect;
   bool m_selected{false};
   int m_uses;
 };
