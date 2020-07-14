@@ -1,18 +1,18 @@
 #include "resources.hpp"
 
+#include <filesystem>
+
 namespace daedalus
 {
 
-static std::filesystem::path sg_resourceDir;
-
-void initResourceDir(std::filesystem::path p_executablePath)
-{
-  sg_resourceDir = std::filesystem::canonical(p_executablePath).parent_path().parent_path() / "share" / "daedalus";
-}
+static std::filesystem::path const RESOURCE_DIR =
+  std::filesystem::canonical("/proc/self/exe") // Resolve real executable location
+    .parent_path().parent_path() // Move up to the install prefix
+    / "share" / "daedalus"; // Move down to the resource dir
 
 std::string getResource(std::string const& p_resource)
 {
-  return (sg_resourceDir / p_resource).string();
+  return (RESOURCE_DIR / p_resource).string();
 }
 
 }
