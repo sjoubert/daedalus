@@ -55,7 +55,35 @@ target_link_libraries(daedalus PRIVATE
   ImGui-SFML::ImGui-SFML
 )
 
+# Install
 install(TARGETS daedalus)
 install(DIRECTORY res/ DESTINATION ${CMAKE_INSTALL_DATADIR}/daedalus)
+install(DIRECTORY install/share/ DESTINATION ${CMAKE_INSTALL_DATADIR})
 
+# Packaging
 include(CPack)
+
+# AppImage
+find_program(LINUXDEPLOY_EXECUTABLE linuxdeploy REQUIRED)
+mark_as_advanced(LINUXDEPLOY_EXECUTABLE)
+set(daedalus_app_dir ${CMAKE_CURRENT_BINARY_DIR}/daedalus.AppDir)
+
+find_package(Git REQUIRED)
+execute_process(
+  COMMAND ${GIT_EXECUTABLE} rev-list -1 --reverse --abbrev-commit --abbrev=8 HEAD
+  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+  OUTPUT_VARIABLE PROJECT_HASH
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+set(daedalus_app_img daedalus-${PROJECT_VERSION}-${PROJECT_HASH}-x86_64)
+
+add_custom_command(
+  DEPENDS daedalus
+  COMMAND ${CMAKE_COMMAND} -E remove_directory ${daedalus_app_dir}
+  COMMAND ${CMAKE_COMMAND} --install ${CMAKE_CURRENT_BINARY_DIR} --prefix ${daedalus_app_dir}/usr
+  COMMAND ${CMAKE_COMMAND} -E env VERSION=${PROJECT_VERSION}-${PROJECT_HASH}
+    ${LINUXDEPLOY_EXECUTABLE} --verbosity=2 --appdir ${daedalus_app_dir} --output appimage
+  COMMAND ${CMAKE_COMMAND} -E rename ${daedalus_app_img}.AppImage ${daedalus_app_img}.run
+  OUTPUT ${daedalus_app_img}.run
+)
+add_custom_target(appimage DEPENDS ${daedalus_app_img}.run)
