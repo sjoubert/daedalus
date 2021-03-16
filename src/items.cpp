@@ -10,8 +10,8 @@ void RunState::initItems()
   m_malus.emplace_back(Item::Id::Metronome, -1, "Metronome", "Harder? Better? Faster!");
 
   // Time
-  m_bonus.emplace_back(Item::Id::Hourglass, -1, "Zip", "Hey, I shrunk the maze");
-  m_malus.emplace_back(Item::Id::Metronome, -1, "Unzip", "It's bigger on the inside");
+  m_bonus.emplace_back(Item::Id::Zip, -1, "Zip", "Hey, I shrunk the maze");
+  m_malus.emplace_back(Item::Id::Unzip, -1, "Unzip", "It's bigger on the inside");
 
   // Visibility
   m_bonus.emplace_back(Item::Id::Flashlight, 1, "Flashlight", "See far away");
